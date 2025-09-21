@@ -1,12 +1,12 @@
 # Project information
-site_name: Agentic AI Workshop PUCRS 2025
-site_description: Agentic AI Workshop na Semana Acadêmica Integrada da PUCRS
-site_url: https://dougtrajano.github.io/agentic-ai-workshop-pucrs25/
+site_name: Agentic AI Workshop
+site_description: Agentic AI Workshop by ADP Brazil Labs
+site_url: https://dougtrajano.github.io/agentic-ai-workshop/
 site_author: ADP Brazil Labs
 
 # Repository
-repo_name: agentic-ai-workshop-pucrs25
-repo_url: https://github.com/DougTrajano/agentic-ai-workshop-pucrs25
+repo_name: agentic-ai-workshop
+repo_url: https://github.com/DougTrajano/agentic-ai-workshop
 
 # Other
 use_directory_urls: false

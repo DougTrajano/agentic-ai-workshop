@@ -30,4 +30,4 @@ TODO: ADICIONAR IMAGEM (AI AGENTS VS AI WORKFLOWS)
 
 Valorizamos seu feedback! Ao final do workshop, você receberá um formulário para compartilhar suas opiniões e sugestões.
 
-Contribuições são bem-vindas! Abra um *issue* ou *pull request* no [**repositório do workshop**](https://github.com/DougTrajano/agentic-ai-workshop-pucrs25).
+Contribuições são bem-vindas! Abra um *issue* ou *pull request* no [**repositório do workshop**](https://github.com/DougTrajano/agentic-ai-workshop/).

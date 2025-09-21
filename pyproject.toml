@@ -1,7 +1,7 @@
 [project]
 name = "agentic-ai-workshop"
 version = "0.0.1"
-description = "The Agentic AI Workshop at the Semana Acadêmica PUCRS."
+description = "The Agentic AI Workshop by ADP Brazil Labs"
 readme = "README.md"
 requires-python = ">=3.10"
 authors = [
@@ -43,11 +43,11 @@ all = [
 ]
 
 [project.urls]
-Homepage = "https://dougtrajano.github.io/agentic-ai-workshop-pucrs25/"
-Documentation = "https://dougtrajano.github.io/agentic-ai-workshop-pucrs25/"
-Source = "https://github.com/dougtrajano/agentic-ai-workshop-pucrs25.git"
-"Bug Tracker" = "https://github.com/dougtrajano/agentic-ai-workshop-pucrs25/issues"
-Changelog = "https://github.com/DougTrajano/agentic-ai-workshop-pucrs25/releases"
+Homepage = "https://dougtrajano.github.io/agentic-ai-workshop/"
+Documentation = "https://dougtrajano.github.io/agentic-ai-workshop/"
+Source = "https://github.com/dougtrajano/agentic-ai-workshop.git"
+"Bug Tracker" = "https://github.com/dougtrajano/agentic-ai-workshop/issues"
+Changelog = "https://github.com/DougTrajano/agentic-ai-workshop/releases"
 
 [project.scripts]
 docs-serve = "mkdocs.__main__:main"

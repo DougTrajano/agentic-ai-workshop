@@ -14,8 +14,8 @@ Welcome to the Agentic AI Workshop! This repository contains all the materials, 
 1. **Clone the repository:**
 
    ```bash
-   git clone https://github.com/dougtrajano/agentic-ai-workshop-pucrs25.git
-   cd agentic-ai-workshop-pucrs25
+   git clone https://github.com/dougtrajano/agentic-ai-workshop.git
+   cd agentic-ai-workshop
    ```
 
 2. **Create and activate a virtual environment:**
