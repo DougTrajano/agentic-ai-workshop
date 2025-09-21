@@ -1,0 +1,16 @@
+{
+  "default": true,
+  "MD013": false,
+  "MD022": false,
+  "MD024": false,
+  "MD031": false,
+  "MD032": false,
+  "MD033": {
+    "allowed_elements": ["div", "img", "a", "br", "span"]
+  },
+  "MD034": false,
+  "MD040": false,
+  "MD041": false,
+  "MD047": false,
+  "MD053": false
+}

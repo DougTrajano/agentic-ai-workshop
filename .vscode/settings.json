@@ -1,0 +1,5 @@
+{
+    "postman.settings.dotenv-detection-notification-visibility": false,
+    "sqltools.connections": [],
+    "sqltools.useNodeRuntime": true
+}

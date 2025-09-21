@@ -1,0 +1,172 @@
+# Project information
+site_name: Agentic AI Workshop PUCRS 2025
+site_description: Agentic AI Workshop na Semana Acadêmica Integrada da PUCRS
+site_url: https://dougtrajano.github.io/agentic-ai-workshop-pucrs25/
+site_author: ADP Brazil Labs
+
+# Repository
+repo_name: agentic-ai-workshop-pucrs25
+repo_url: https://github.com/DougTrajano/agentic-ai-workshop-pucrs25
+
+# Other
+use_directory_urls: false
+copyright: Copyright 2025 ADP Brazil Labs. Licensed under the Apache License, Version 2.0.
+
+theme:
+  name: material
+  font:
+    text: Google Sans
+    code: Roboto Mono
+  logo: assets/logo1.png
+  favicon: assets/favicon.ico
+  language: en
+  icon:
+    repo: fontawesome/brands/github
+  palette:
+    - media: "(prefers-color-scheme: light)" # get system preference
+      scheme: default
+      primary: red
+      accent: grey
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)" # get system preference
+      scheme: slate
+      primary: red
+      accent: white
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+  features:
+    - content.code.annotate
+    - content.code.copy
+    - content.code.select
+    - content.tabs.link
+    - content.tooltips
+    - navigation.footer
+    - navigation.indexes
+    - navigation.instant
+    - navigation.instant.progress
+    - navigation.path
+    - navigation.sections
+    - navigation.tabs
+    - navigation.top
+    - navigation.tracking
+    - search.highlight
+    - search.share
+    - search.suggest
+    - toc.follow
+    - toc.integrate
+
+nav:
+  - Visão Geral:
+    - Introdução: index.md
+    - Pré-requisitos: prerequisites.md
+    - Instrutores:
+      - Douglas Trajano: instructors/douglas-trajano.md
+    - Oferecimento: adp-brazil-labs.md
+  - Agentic AI:
+    - Introdução: agentic-ai/index.md
+    - AI Agents vs. AI Workflows: agentic-ai/agents-vs-workflows.md
+    - Context Engineering:
+      - Introdução: agentic-ai/context-engineering/index.md
+      - Prompt Engineering: agentic-ai/prompt-engineering.md
+    - AI Agents:
+      - Visão Geral: agentic-ai/agents/index.md
+      - Memory Management: agentic-ai/agents/memory.md
+      - Retrieval-Augmented Generation: agentic-ai/agents/rag.md
+      - State Management: agentic-ai/agents/state.md
+      - Tools & MCP: agentic-ai/agents/tools.md
+    - AI Frameworks:
+      - Visão Geral: agentic-ai/frameworks/index.md
+      - LangGraph: agentic-ai/frameworks/langgraph.md
+      - LlamaIndex: agentic-ai/frameworks/llamaindex.md
+      - smolagents: agentic-ai/frameworks/smolagents.md
+      - Pydantic AI: agentic-ai/frameworks/pydantic-ai.md
+      - Outros Frameworks: agentic-ai/frameworks/other-frameworks.md
+    - AI Observability:
+      - Visão Geral: agentic-ai/observability/index.md
+      - MLflow Tracing: agentic-ai/observability/mlflow.md
+      - Langfuse: agentic-ai/observability/langfuse.md
+      - Langtrace: agentic-ai/observability/langtrace.md
+      - Pydantic Logfire: agentic-ai/observability/logfire.md
+  - Hands-on Workshop:
+    - Visão Geral: workshop/index.md
+    - HR Database: workshop/database.md
+  - Recursos Adicionais: resources.md
+
+plugins:
+  - tooltips
+  - search
+  - section-index
+  - git-revision-date-localized
+  - exclude:
+      glob:
+        - diagrams/*
+
+extra:
+  version:
+    provider: mike
+  social:
+    - icon: fontawesome/brands/linkedin
+      link: https://www.linkedin.com/company/adpbrazillabs/
+      name: ADP Brazil Labs - LinkedIn
+    - icon: fontawesome/brands/x-twitter
+      link: https://x.com/adpbrazillabs
+      name: ADP Brazil Labs - X
+    - icon: fontawesome/brands/instagram
+      link: https://www.instagram.com/adpbrazillabs/
+      name: ADP Brazil Labs - Instagram
+    - icon: fontawesome/brands/medium
+      link: https://medium.com/adp-brazil-labs
+      name: ADP Brazil Labs - Medium
+
+extra_css:
+  - https://unpkg.com/mermaid@7.1.2/dist/mermaid.css
+  - stylesheets/extra.css
+  - stylesheets/tooltip.css
+
+extra_javascript:
+  - https://unpkg.com/mermaid@7.1.2/dist/mermaid.min.js
+  - https://cdnjs.cloudflare.com/ajax/libs/tablesort/5.2.1/tablesort.min.js
+  - https://cdnjs.cloudflare.com/ajax/libs/Chart.js/1.0.2/Chart.js
+  - javascripts/tables.js
+  - javascripts/mathjax.js
+  - https://polyfill.io/v3/polyfill.min.js?features=es6
+  - https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js
+
+markdown_extensions:
+  - abbr
+  - admonition
+  - attr_list
+  - def_list
+  - footnotes
+  - md_in_html
+  - meta
+  - pymdownx.caret
+  - pymdownx.details
+  - pymdownx.magiclink
+  - pymdownx.mark
+  - pymdownx.progressbar
+  - pymdownx.snippets
+  - pymdownx.tabbed
+  - pymdownx.tilde
+  - pymdownx.arithmatex:
+      generic: true
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.tasklist:
+      clickable_checkbox: true
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - toc:
+      permalink: "#"
+      slugify: !!python/name:pymdownx.slugs.uslugify
