@@ -91,7 +91,7 @@ build-backend = "hatchling.build"
 allow-direct-references = true
 
 [tool.hatch.build.targets.wheel]
-packages = ["workshop"]
+packages = ["src"]
 
 [tool.ruff]
 line-length = 99

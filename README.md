@@ -18,27 +18,26 @@ Welcome to the Agentic AI Workshop! This repository contains all the materials, 
    cd agentic-ai-workshop
    ```
 
-2. **Create and activate a virtual environment:**
-
-   ```bash
-   uv venv
-   source .venv/bin/activate  # On Windows: .venv\Scripts\activate
-   ```
-
-3. **Install the project:**
+2. **Install the project with dependencies:**
 
    ```bash
    # Basic installation
-   uv pip install -e .
+   uv sync
    
    # With development dependencies
-   uv pip install -e . --group dev
+   uv sync --group dev
    
    # With documentation dependencies
-   uv pip install -e . --group docs
+   uv sync --group docs
    
    # Install everything at once
-   uv pip install -e . --group dev --group docs
+   uv sync --all-groups
+   ```
+
+3. **Activate the virtual environment:**
+
+   ```bash
+   source .venv/bin/activate  # On Windows: .venv\Scripts\activate
    ```
 
 ### Using pip
@@ -72,6 +71,10 @@ Once installed, you can use the following commands to work with the documentatio
 - **Serve documentation locally:**
 
   ```bash
+  # With uv
+  uv run mkdocs serve
+  
+  # Or with activated virtual environment
   docs-serve
   # or directly: mkdocs serve
   ```
@@ -79,6 +82,10 @@ Once installed, you can use the following commands to work with the documentatio
 - **Build documentation:**
 
   ```bash
+  # With uv
+  uv run mkdocs build
+  
+  # Or with activated virtual environment  
   docs-build
   # or directly: mkdocs build
   ```
@@ -86,23 +93,36 @@ Once installed, you can use the following commands to work with the documentatio
 - **Deploy documentation:**
 
   ```bash
+  # With uv
+  uv run mike deploy
+  
+  # Or with activated virtual environment
   docs-deploy
   # or directly: mike deploy
   ```
 
 ### Development
 
-The project includes several development tools configured:
+The project includes several development tools configured. You can run them with uv or in an activated virtual environment:
 
 - **Code formatting with Black:**
 
   ```bash
+  # With uv
+  uv run black .
+  
+  # Or with activated virtual environment
   black .
   ```
 
 - **Linting with Ruff:**
 
   ```bash
+  # With uv
+  uv run ruff check .
+  uv run ruff format .
+  
+  # Or with activated virtual environment
   ruff check .
   ruff format .
   ```
@@ -110,12 +130,20 @@ The project includes several development tools configured:
 - **Type checking with Pyright:**
 
   ```bash
+  # With uv
+  uv run pyright
+  
+  # Or with activated virtual environment
   pyright
   ```
 
 - **Running tests:**
 
   ```bash
+  # With uv
+  uv run pytest
+  
+  # Or with activated virtual environment
   pytest
   ```
 
@@ -124,6 +152,10 @@ The project includes several development tools configured:
 Start JupyterLab for interactive development:
 
 ```bash
+# With uv
+uv run jupyter lab
+
+# Or with activated virtual environment
 jupyter lab
 ```
 
