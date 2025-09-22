@@ -121,15 +121,21 @@ Para carregar o dataset no Python, você pode usar o seguinte código:
 ```python
 from datasets import load_dataset
 
+
 # Carregar todas as tabelas
 business_units = load_dataset("dougtrajano/hr-synthetic-database", "business_units")
 departments = load_dataset("dougtrajano/hr-synthetic-database", "departments")
 jobs = load_dataset("dougtrajano/hr-synthetic-database", "jobs")
 employees = load_dataset("dougtrajano/hr-synthetic-database", "employees")
 compensations = load_dataset("dougtrajano/hr-synthetic-database", "compensations")
+```
 
-# Converter para DataFrame do pandas
+Para converter as tabelas de employees e compensations em Pandas DataFrames:
+
+```python
 import pandas as pd
+
+
 df_employees = pd.DataFrame(employees['train'])
 df_compensations = pd.DataFrame(compensations['train'])
 ```
@@ -142,6 +148,7 @@ No workshop, configuraremos um database DuckDB local para facilitar as consultas
 import duckdb
 import pandas as pd
 from datasets import load_dataset
+
 
 def setup_hr_database():
     """Configura database local com os dados do Hugging Face"""
