@@ -107,25 +107,10 @@ compensations:
 
 ### 📈 Análises que Realizaremos
 
-1. **Análise de Turnover**
-   - Taxa de rotatividade por departamento
-   - Correlação entre satisfação e turnover
-   - Identificação de padrões de saída
-
-2. **People Analytics**
-   - Distribuição demográfica da força de trabalho
-   - Análise de diversidade e inclusão
-   - Gaps de representatividade
-
-3. **Análise de Compensação**
-   - Equity pay por gênero e etnia
-   - Benchmarking salarial por nível
-   - Análise de estrutura de remuneração
-
-4. **Análise Organizacional**
-   - Estrutura hierárquica e spans de controle
-   - Distribuição de talentos por unidade de negócio
-   - Planejamento de sucessão
+1. **Distribuição Demográfica**: Análise de gênero, etnia, faixa etária, nível e área de educação dos funcionários por unidade de negócio, departamento e cargo.
+2. **Remuneração e Benefícios**: Comparação de salários, bônus e comissões por cargo, departamento, unidade de negócio, gênero e geração.
+3. **Diversidade e Inclusão**: Avaliação da representatividade de grupos étnicos e de gênero em diferentes níveis hierárquicos e áreas funcionais.
+4. **Análise de Contratos e modelos de Trabalho**: Proporção de funcionários em diferentes tipos de contrato (full-time, part-time, contract) e modelos de trabalho (on-site, remoto, híbrido).
 
 ## 📦 Como Acessar o Dataset
 
