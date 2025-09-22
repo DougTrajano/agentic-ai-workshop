@@ -92,7 +92,7 @@ nav:
       - Pydantic Logfire: agentic-ai/observability/logfire.md
   - Hands-on Workshop:
     - Visão Geral: workshop/index.md
-    - HR Database: workshop/database.md
+    - HR Synthetic Database: workshop/database.md
   - Recursos Adicionais: resources.md
 
 plugins:

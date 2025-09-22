@@ -1,4 +1,4 @@
-# Hands-on Workshop: Construindo um Sistema de Análise de RH com Agentic AI
+# Hands-on Workshop: Construindo um Data Analyst Agent para People Analytics
 
 Bem-vindo ao workshop prático! Aqui você colocará em prática todos os conceitos aprendidos construindo um sistema completo de análise de RH usando agentes de IA.
 
