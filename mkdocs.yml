@@ -95,6 +95,7 @@ nav:
     - Visão Geral: workshop/index.md
     - Setup do Ambiente: workshop/setup.md
     - HR Synthetic Database: workshop/database.md
+    - People Analytics Agent: workshop/people-analytics-agent.md
     - Próximos Passos: workshop/next-steps.md
   - Recursos Adicionais: resources.md
 
