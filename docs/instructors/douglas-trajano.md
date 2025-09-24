@@ -2,7 +2,7 @@
 
 - Sr Lead Data Scientist na [ADP Brazil Labs](https://www.adp.com/).
 - Mestre em Ciência da Computação pela [PUCRS](https://www.pucrs.br/).
-- AWS SME (Subject Matter Expert) para certificações de AI/ML (AI Practitioner, MLE - Associate, etc).
+- AWS SME (Subject Matter Expert) para certificações de AI/ML ([AI Practitioner](https://aws.amazon.com/certification/certified-ai-practitioner/), [MLE - Associate](https://aws.amazon.com/certification/certified-machine-learning-engineer-associate/), etc).
 
 ## Certificações
 
