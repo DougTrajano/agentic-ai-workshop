@@ -67,10 +67,11 @@ nav:
     - Oferecimento: adp-brazil-labs.md
   - Agentic AI:
     - Introdução: agentic-ai/index.md
+    - Generative AI: agentic-ai/generative-ai.md
     - AI Agents vs. AI Workflows: agentic-ai/agents-vs-workflows.md
     - Context Engineering:
       - Introdução: agentic-ai/context-engineering/index.md
-      - Prompt Engineering: agentic-ai/prompt-engineering.md
+      - Prompting Techniques: agentic-ai/context-engineering/prompting-techniques.md
     - AI Agents:
       - Visão Geral: agentic-ai/agents/index.md
       - Memory Management: agentic-ai/agents/memory.md
@@ -92,7 +93,9 @@ nav:
       - Pydantic Logfire: agentic-ai/observability/logfire.md
   - Hands-on Workshop:
     - Visão Geral: workshop/index.md
+    - Setup do Ambiente: workshop/setup.md
     - HR Synthetic Database: workshop/database.md
+    - Próximos Passos: workshop/next-steps.md
   - Recursos Adicionais: resources.md
 
 plugins:

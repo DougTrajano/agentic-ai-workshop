@@ -46,10 +46,10 @@ Explore as principais ferramentas para observabilidade de sistemas agentivos:
 
 ### Plataformas de Tracing
 
-- **[MLflow Tracing](mlflow.md)**: Ferramenta open-source para tracing de LLMs com registros detalhados de inputs, outputs e metadados
-- **[Langfuse](langfuse.md)**: Plataforma especializada em observabilidade de LLMs com recursos avançados de análise
-- **[Langtrace](langtrace.md)**: Tracing detalhado usando padrões OpenTelemetry
-- **[Pydantic Logfire](logfire.md)**: Observabilidade nativa para aplicações Pydantic AI
+- **[MLflow](mlflow.md)**: Plataforma enterprise para tracing de GenAI com suporte completo a agentes e workflows
+- **[Langfuse](langfuse.md)**: Open-source LLM observability com foco em cost tracking e evaluation
+- **[Langtrace](langtrace.md)**: OpenTelemetry-native tracing com desenvolvimento local e integração Ollama
+- **[Logfire](logfire.md)**: Observabilidade Python-first com integração nativa Pydantic AI
 
 ### Estratégias e Melhores Práticas
 
@@ -83,12 +83,3 @@ Explore as principais ferramentas para observabilidade de sistemas agentivos:
 - Custo por request
 - ROI por tipo de tarefa
 - Taxa de resolução
-
-## Próximos Passos
-
-1. Escolha uma ferramenta de observabilidade adequada ao seu caso de uso
-2. Implemente tracing básico em seus agentes
-3. Configure alertas e dashboards
-4. Analise dados para otimizações contínuas
-
-Explore cada ferramenta em detalhes nas seções específicas desta documentação.

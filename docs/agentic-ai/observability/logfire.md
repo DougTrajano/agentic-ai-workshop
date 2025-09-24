@@ -1,53 +1,610 @@
-# Pydantic Logfire
+# Pydantic Logfire - Observabilidade Nativa para Python
 
-O **Pydantic Logfire** oferece observabilidade nativa para aplicações Pydantic AI usando OpenTelemetry[^28].
+O **Pydantic Logfire** é uma plataforma de observabilidade criada pela equipe do Pydantic, oferecendo insights únicos para aplicações Python. Especialmente poderoso para agentes baseados em Pydantic AI 🔥
 
-## 🔧 Integração Automática
+## 🎯 Por que Logfire para Agentes Python?
+
+### 🐍 **Python-Centric**
+- Display rico de objetos Python nativos
+- Telemetria de event-loop específica
+- Profiling de código Python e queries SQL
+- Insights únicos em validação Pydantic
+
+### 📊 **SQL para Análise**
+- Query seus dados com SQL padrão
+- Compatível com ferramentas BI existentes
+- Análises customizadas sem aprender nova sintaxe
+- Flexibilidade total de consulta
+
+### 🌐 **OpenTelemetry Nativo**
+- Wrapper opinativo sobre OpenTelemetry
+- Suporte completo a traces, metrics, logs
+- Integração com qualquer stack existente
+- Export para ferramentas tradicionais
+
+## 🛠️ Configuração Inicial
+
+### Instalação e Autenticação
+
+```bash
+# Instalação
+pip install logfire
+
+# Autenticação (primeira vez)
+logfire auth
+```
+
+### Setup Básico em Python
 
 ```python
 import logfire
-from pydantic_ai import Agent
+from datetime import date
 
-# Configuração do Logfire
-logfire.configure(
-    send_to_logfire='if-token-present',
-    console=True,
-    service_name='agentic-ai-workshop'
-)
+# Configuração inicial
+logfire.configure()
 
-# Instrumentação automática
-logfire.instrument_pydantic()
-logfire.instrument_openai()
-logfire.instrument_anthropic()
+# Logging básico com contexto rico
+logfire.info('Olá, {name}!', name='mundo')
 
-# Agente com observabilidade automática
-agent = Agent(
-    'openai:gpt-4',
-    system_prompt="Você é um assistente de análise de dados."
-)
-
-# Execução automaticamente instrumentada
-with logfire.span('agent_execution'):
-    result = agent.run_sync("Analise as vendas do último trimestre")
+# Spans com contexto automático
+with logfire.span('Coletando dados do usuário'):
+    user_input = input('Qual sua idade [YYYY-mm-dd]? ')
+    dob = date.fromisoformat(user_input)
     
-    # Logs estruturados automáticos
-    logfire.info(
-        'Agent execution completed',
-        result=result.data,
-        cost=result.cost(),
-        tokens=result.usage()
-    )
+    # Debug com objetos Python nativos
+    logfire.debug('{dob=} {age=!r}', dob=dob, age=date.today() - dob)
 ```
 
-## 📊 Observabilidade Avançada
+### Integração com FastAPI (Automática)
 
 ```python
 import logfire
 from pydantic import BaseModel
-from typing import List
+from fastapi import FastAPI
 
-class AgentMetrics(BaseModel):
-    execution_time: float
+app = FastAPI()
+
+# Configurar Logfire
+logfire.configure()
+
+# Instrumentação automática do FastAPI
+logfire.instrument_fastapi(app)
+
+class QueryRequest(BaseModel):
+    query: str
+    user_id: str
+    temperature: float = 0.7
+
+class AgentResponse(BaseModel):
+    response: str
+    confidence: float
+    processing_time: float
+
+@app.post("/agent/query", response_model=AgentResponse)
+async def processar_query_agente(request: QueryRequest):
+    """Endpoint com observabilidade automática"""
+    
+    # Logfire captura automaticamente:
+    # - Request/response models
+    # - Validações Pydantic
+    # - Tempo de processamento
+    # - Status codes
+    
+    with logfire.span('Processamento do agente'):
+        # Simular processamento
+        resposta = await processar_com_llm(request.query)
+        
+        return AgentResponse(
+            response=resposta,
+            confidence=0.95,
+            processing_time=1.23
+        )
+```
+
+## 🤖 Instrumentação de Agentes Pydantic AI
+
+### Agente Básico com Logfire
+
+```python
+import logfire
+from pydantic_ai import Agent
+from pydantic import BaseModel
+from typing import Optional
+
+# Configurar instrumentação automática
+logfire.configure()
+logfire.instrument_openai()  # Auto-instrumenta OpenAI
+logfire.instrument_anthropic()  # Auto-instrumenta Anthropic
+
+class AgenteConfig(BaseModel):
+    temperatura: float = 0.7
+    max_tokens: int = 500
+    modelo: str = "gpt-4"
+
+class ResultadoAgente(BaseModel):
+    resposta: str
+    confianca: float
+    tempo_processamento: float
+    tokens_utilizados: int
+    custo_estimado: float
+
+# Agente instrumentado
+agente = Agent(
+    'openai:gpt-4',
+    system_prompt="Você é um especialista em análise de dados empresariais."
+)
+
+@logfire.instrument('executar_agente')
+def executar_agente_instrumentado(
+    query: str, 
+    user_id: str,
+    config: Optional[AgenteConfig] = None
+) -> ResultadoAgente:
+    """Agente com instrumentação completa"""
+    
+    if config is None:
+        config = AgenteConfig()
+    
+    # Context span para toda a execução
+    with logfire.span(
+        'Execução do agente', 
+        query=query,
+        user_id=user_id,
+        config=config.model_dump()
+    ):
+        
+        # Fase 1: Preparação
+        with logfire.span('Preparação da query'):
+            query_processada = preprocessar_query(query)
+            logfire.info('Query preprocessada', original=query, processada=query_processada)
+        
+        # Fase 2: Execução do agente (auto-instrumentada)
+        with logfire.span('Execução LLM'):
+            resultado = agente.run_sync(query_processada)
+            
+            # Logfire automaticamente captura:
+            # - Prompt enviado
+            # - Response recebida  
+            # - Tokens utilizados
+            # - Custo estimado
+            # - Latência
+        
+        # Fase 3: Pós-processamento
+        with logfire.span('Pós-processamento'):
+            resposta_final = pos_processar_resposta(resultado.data)
+            
+            # Calcular métricas
+            confianca = calcular_confianca(resultado)
+            
+            logfire.info(
+                'Execução completa',
+                confianca=confianca,
+                tokens=resultado.usage().total_tokens if resultado.usage() else 0,
+                custo=resultado.cost()
+            )
+        
+        return ResultadoAgente(
+            resposta=resposta_final,
+            confianca=confianca,
+            tempo_processamento=1.5,  # Seria calculado automaticamente
+            tokens_utilizados=resultado.usage().total_tokens if resultado.usage() else 0,
+            custo_estimado=resultado.cost()
+        )
+
+# Uso do agente
+resultado = executar_agente_instrumentado(
+    "Analise as tendências de vendas do Q4",
+    "user123",
+    AgenteConfig(temperatura=0.8, max_tokens=1000)
+)
+```
+
+### Sistema Multi-Agente com Coordenação
+
+```python
+from enum import Enum
+from typing import List, Dict, Any
+import asyncio
+
+class TipoAgente(str, Enum):
+    ANALISTA = "analista"
+    CRITICO = "critico"
+    SINTETIZADOR = "sintetizador"
+
+class SistemaMultiAgente:
+    """Sistema multi-agente com observabilidade completa"""
+    
+    def __init__(self):
+        self.agentes = {
+            TipoAgente.ANALISTA: Agent(
+                'openai:gpt-4',
+                system_prompt="Você é um analista especializado."
+            ),
+            TipoAgente.CRITICO: Agent(
+                'openai:gpt-4',
+                system_prompt="Você revisa e critica análises."
+            ),
+            TipoAgente.SINTETIZADOR: Agent(
+                'openai:gpt-4',
+                system_prompt="Você sintetiza múltiplas perspectivas."
+            )
+        }
+    
+    @logfire.instrument('sistema_multiagente')
+    async def processar_query_colaborativa(
+        self, 
+        query: str, 
+        user_id: str
+    ) -> Dict[str, Any]:
+        """Processamento colaborativo com múltiplos agentes"""
+        
+        with logfire.span('Sessão multi-agente', query=query, user_id=user_id):
+            resultados = {}
+            
+            # Fase 1: Análise inicial
+            with logfire.span('Fase 1: Análise inicial'):
+                resultado_analista = await self._executar_agente(
+                    TipoAgente.ANALISTA,
+                    f"Analise a seguinte solicitação: {query}"
+                )
+                resultados['analise_inicial'] = resultado_analista
+                
+                logfire.info(
+                    'Análise inicial completa',
+                    agente=TipoAgente.ANALISTA,
+                    tokens=resultado_analista.usage().total_tokens if resultado_analista.usage() else 0
+                )
+            
+            # Fase 2: Crítica e revisão
+            with logfire.span('Fase 2: Revisão crítica'):
+                prompt_critico = f"""
+                Analise criticamente esta análise:
+                {resultado_analista.data}
+                
+                Identifique pontos fracos e sugestões de melhoria.
+                """
+                
+                resultado_critico = await self._executar_agente(
+                    TipoAgente.CRITICO,
+                    prompt_critico
+                )
+                resultados['revisao_critica'] = resultado_critico
+                
+                logfire.info(
+                    'Revisão crítica completa',
+                    agente=TipoAgente.CRITICO,
+                    tokens=resultado_critico.usage().total_tokens if resultado_critico.usage() else 0
+                )
+            
+            # Fase 3: Síntese final
+            with logfire.span('Fase 3: Síntese final'):
+                prompt_sintese = f"""
+                Sintetize as seguintes perspectivas em uma resposta final:
+                
+                Análise inicial: {resultado_analista.data}
+                
+                Revisão crítica: {resultado_critico.data}
+                
+                Query original: {query}
+                """
+                
+                resultado_final = await self._executar_agente(
+                    TipoAgente.SINTETIZADOR,
+                    prompt_sintese
+                )
+                resultados['sintese_final'] = resultado_final
+                
+                # Calcular métricas agregadas
+                total_tokens = sum(
+                    r.usage().total_tokens if r.usage() else 0 
+                    for r in resultados.values()
+                )
+                custo_total = sum(r.cost() for r in resultados.values())
+                
+                logfire.info(
+                    'Síntese final completa',
+                    agente=TipoAgente.SINTETIZADOR,
+                    total_tokens=total_tokens,
+                    custo_total=custo_total
+                )
+            
+            return {
+                'resposta_final': resultado_final.data,
+                'etapas': {
+                    'analise': resultado_analista.data,
+                    'critica': resultado_critico.data,
+                    'sintese': resultado_final.data
+                },
+                'metricas': {
+                    'total_tokens': total_tokens,
+                    'custo_total': custo_total,
+                    'agentes_envolvidos': len(self.agentes)
+                }
+            }
+    
+    async def _executar_agente(self, tipo: TipoAgente, prompt: str):
+        """Executa um agente específico com tracing"""
+        with logfire.span(f'Execução {tipo.value}', tipo_agente=tipo.value):
+            return await self.agentes[tipo].run(prompt)
+
+# Uso do sistema multi-agente
+sistema = SistemaMultiAgente()
+resultado = await sistema.processar_query_colaborativa(
+    "Como podemos melhorar a retenção de clientes?",
+    "user456"
+)
+```
+
+## 📊 Analytics e Consultas SQL
+
+### Análises Customizadas com SQL
+
+```python
+# Logfire permite consultas SQL diretas nos dados
+query_sql = """
+SELECT 
+    service_name,
+    span_name,
+    AVG(duration_ms) as avg_duration,
+    COUNT(*) as execution_count,
+    SUM(CASE WHEN level = 'error' THEN 1 ELSE 0 END) as error_count
+FROM spans 
+WHERE 
+    start_timestamp >= NOW() - INTERVAL '24 HOURS'
+    AND span_name LIKE '%agente%'
+GROUP BY service_name, span_name
+ORDER BY avg_duration DESC
+"""
+
+# Executar via dashboard Logfire ou API
+```
+
+### Dashboard Customizado
+
+```python
+import logfire
+from typing import Dict, List
+import pandas as pd
+
+class LogfireAnalytics:
+    """Classe para análises avançadas usando Logfire"""
+    
+    @logfire.instrument('analytics_relatorio')
+    def gerar_relatorio_agentes(self, periodo_horas: int = 24) -> Dict:
+        """Gera relatório de performance dos agentes"""
+        
+        with logfire.span('Coleta de dados', periodo=periodo_horas):
+            # Coletar métricas dos traces
+            metricas = self._coletar_metricas_periodo(periodo_horas)
+            
+            logfire.info('Dados coletados', total_spans=len(metricas))
+        
+        with logfire.span('Análise de dados'):
+            analise = {
+                'periodo_horas': periodo_horas,
+                'total_execucoes': len(metricas),
+                'tempo_medio_execucao': self._calcular_media_tempo(metricas),
+                'taxa_erro': self._calcular_taxa_erro(metricas),
+                'custos_totais': self._calcular_custos_totais(metricas),
+                'agentes_mais_usados': self._agentes_populares(metricas),
+                'picos_uso': self._identificar_picos(metricas)
+            }
+            
+            logfire.info('Análise completa', resumo=analise)
+        
+        return analise
+    
+    def _coletar_metricas_periodo(self, horas: int) -> List[Dict]:
+        """Simula coleta de métricas via API Logfire"""
+        # Na implementação real, usaria API do Logfire
+        return [
+            {
+                'span_name': 'executar_agente',
+                'duration_ms': 1200,
+                'tokens': 150,
+                'cost': 0.012,
+                'success': True,
+                'timestamp': '2024-01-01T10:00:00Z'
+            },
+            # ... mais dados
+        ]
+    
+    def _calcular_media_tempo(self, metricas: List[Dict]) -> float:
+        """Calcula tempo médio de execução"""
+        tempos = [m['duration_ms'] for m in metricas]
+        return sum(tempos) / len(tempos) if tempos else 0
+    
+    def _calcular_taxa_erro(self, metricas: List[Dict]) -> float:
+        """Calcula taxa de erro"""
+        total = len(metricas)
+        erros = sum(1 for m in metricas if not m.get('success', True))
+        return erros / total if total > 0 else 0
+    
+    def _calcular_custos_totais(self, metricas: List[Dict]) -> float:
+        """Calcula custos totais"""
+        return sum(m.get('cost', 0) for m in metricas)
+
+# Gerar relatórios automáticos
+analytics = LogfireAnalytics()
+relatorio = analytics.gerar_relatorio_agentes(24)
+
+print(f"Execuções: {relatorio['total_execucoes']}")
+print(f"Tempo médio: {relatorio['tempo_medio_execucao']:.2f}ms")
+print(f"Taxa de erro: {relatorio['taxa_erro']:.2%}")
+print(f"Custo total: ${relatorio['custos_totais']:.4f}")
+```
+
+## � Integração com Ferramentas DevOps
+
+### CI/CD com Performance Testing
+
+```python
+import logfire
+import pytest
+import time
+
+class TestPerformanceAgentes:
+    """Testes de performance com observabilidade"""
+    
+    @pytest.fixture(autouse=True)
+    def setup_logfire(self):
+        """Setup Logfire para testes"""
+        logfire.configure(
+            send_to_logfire=False,  # Não enviar durante testes
+            console=True
+        )
+    
+    @logfire.instrument('performance_test')
+    def test_latencia_agente_simples(self):
+        """Testa latência de agente simples"""
+        
+        with logfire.span('Test: Latência agente simples'):
+            start_time = time.time()
+            
+            resultado = executar_agente_instrumentado(
+                "Teste simples",
+                "test_user"
+            )
+            
+            execution_time = time.time() - start_time
+            
+            # Assertions com logging
+            assert execution_time < 5.0, f"Execução muito lenta: {execution_time}s"
+            assert resultado.confianca > 0.8, f"Confiança baixa: {resultado.confianca}"
+            
+            logfire.info(
+                'Performance test completo',
+                execution_time=execution_time,
+                confianca=resultado.confianca,
+                status='PASS'
+            )
+    
+    @logfire.instrument('load_test')
+    def test_carga_multiplos_agentes(self):
+        """Teste de carga com múltiplos agentes"""
+        
+        num_requests = 10
+        
+        with logfire.span(f'Load test: {num_requests} requests'):
+            tempos = []
+            
+            for i in range(num_requests):
+                with logfire.span(f'Request {i+1}'):
+                    start = time.time()
+                    
+                    resultado = executar_agente_instrumentado(
+                        f"Query de teste {i+1}",
+                        f"test_user_{i}"
+                    )
+                    
+                    tempo = time.time() - start
+                    tempos.append(tempo)
+                    
+                    logfire.debug(f'Request {i+1} completo', tempo=tempo)
+            
+            # Análise dos resultados
+            tempo_medio = sum(tempos) / len(tempos)
+            tempo_max = max(tempos)
+            
+            logfire.info(
+                'Load test results',
+                requests=num_requests,
+                tempo_medio=tempo_medio,
+                tempo_max=tempo_max,
+                all_times=tempos
+            )
+            
+            assert tempo_medio < 3.0, f"Tempo médio muito alto: {tempo_medio}s"
+            assert tempo_max < 10.0, f"Tempo máximo muito alto: {tempo_max}s"
+
+# Executar testes com observabilidade
+# pytest test_performance.py -v
+```
+
+### Monitoring em Kubernetes
+
+```yaml
+# deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: agente-ia-app
+spec:
+  template:
+    spec:
+      containers:
+      - name: app
+        image: agente-ia:latest
+        env:
+        - name: LOGFIRE_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: logfire-secret
+              key: token
+        - name: OTEL_SERVICE_NAME
+          value: "agente-ia-production"
+        - name: OTEL_RESOURCE_ATTRIBUTES
+          value: "environment=prod,version=1.0.0"
+```
+
+```python
+# app_kubernetes.py
+import logfire
+import os
+
+# Configurar para Kubernetes
+logfire.configure(
+    token=os.environ.get('LOGFIRE_TOKEN'),
+    service_name=os.environ.get('OTEL_SERVICE_NAME', 'agente-ia'),
+    environment=os.environ.get('ENVIRONMENT', 'production')
+)
+
+# Instrumentação automática para apps Kubernetes
+logfire.instrument_requests()  # HTTP requests
+logfire.instrument_psycopg2()  # PostgreSQL
+logfire.instrument_redis()     # Redis
+
+@logfire.instrument('health_check')
+def health_check():
+    """Health check para Kubernetes"""
+    return {"status": "healthy", "service": "agente-ia"}
+
+# App com observabilidade completa
+from fastapi import FastAPI
+app = FastAPI()
+logfire.instrument_fastapi(app)
+
+@app.get("/health")
+def get_health():
+    return health_check()
+```
+
+## 🎓 Melhores Práticas
+
+### ✅ **Faça**
+- Use `logfire.configure()` no início da aplicação
+- Aproveite instrumentação automática de frameworks
+- Configure environment/service names apropriados
+- Use spans para operações lógicas importantes
+- Implemente health checks observáveis
+
+### ❌ **Evite**
+- Logging excessivo que impacta performance
+- Expor dados sensíveis nos logs
+- Instrumentação manual quando existe automática
+- Ignorar configuração de sampling em produção
+- Misturar logs de diferentes ambientes
+
+## 🔗 Recursos Adicionais
+
+- [Documentação Oficial Logfire](https://pydantic.dev/logfire)
+- [Integrações Suportadas](https://docs.pydantic.dev/logfire/integrations/)
+- [Pydantic AI Integration](https://docs.pydantic.dev/logfire/integrations/pydantic-ai/)
+- [SQL Query Examples](https://docs.pydantic.dev/logfire/guides/advanced/querying/)
+
+---
+
+**Próximo:** [Estratégias de Observabilidade](strategies.md) 🚀
     token_usage: int
     tool_calls: List[str]
     success: bool

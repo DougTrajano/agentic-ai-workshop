@@ -374,12 +374,6 @@ class RAGAgent:
         return response
 ```
 
-## Próximos Passos
-
-- **[Memória em Agentes](memory.md)**: Aprenda sobre diferentes tipos de memória
-- **[Gerenciamento de Estado](state.md)**: Explore como gerenciar o estado dos agentes
-- **[Ferramentas e MCP](tools.md)**: Descubra como integrar ferramentas aos agentes
-
 ---
 
 [^14]: [What is RAG? - AWS](https://aws.amazon.com/what-is/retrieval-augmented-generation/)

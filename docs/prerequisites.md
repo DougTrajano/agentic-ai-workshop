@@ -7,3 +7,5 @@
 !!! Ambiente de Desenvolvimento
 
     Vamos fornecer um ambiente de desenvolvimento no Databricks Free Edition, então não se preocupe em configurar tudo localmente. Apenas certifique-se de ter uma conta no [**Databricks**](https://databricks.com/try-databricks) e acesso à internet.
+
+Veja mais em [Setup do Ambiente - Hands-on Workshop](./workshop/setup.md).

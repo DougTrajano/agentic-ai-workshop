@@ -116,8 +116,3 @@ result = pipeline.run({
 | **Crew AI** | Multi-agent teams | Média | Colaboração entre agentes |
 | **AutoGen** | Agent conversations | Média | Diálogos estruturados |
 | **Haystack** | Search & QA | Alta | Aplicações de busca |
-
-## Próximos Passos
-
- **[Frameworks Index](index.md)**: Volte ao índice principal
-- **[Frameworks Index](index.md)**: Volte ao índice principal

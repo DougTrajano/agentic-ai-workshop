@@ -8,23 +8,20 @@ Você aprenderá a criar **AI Agents** (também conhecido como *LLM-based Agents
 
 ## O que vamos aprender?
 
-### Dia 1 - 📚 Fundamentos Teóricos
+### Dia 1 - 🤓 Teoria
 
 - **Generative AI**: Modelos que criam conteúdo "novo" como texto, imagens, código, etc.
-- **Agentic AI**: Diferenciação entre workflows e agentes, padrões eficazes e quando usar cada abordagem.
-- **AI Agents 101**: Memória, RAG, gerenciamento de estado, ferramentas e Model Context Protocol (MCP).
-- **AI Frameworks**: LangGraph, LlamaIndex, SmolAgents, Pydantic AI e outros.
-- **AI Providers**: OpenAI, Google Gemini, Anthropic, Hugging Face e outros.
-- **Observability**: MLflow Tracing, Langfuse, Langtrace e Pydantic Logfire
+- **Agentic AI**: Diferenciação entre AI Workflows e AI Agents, e quando usar cada abordagem.
+- **AI Agents 101**: Memória, RAG, gerenciamento de estado, ferramentas (tools) e Model Context Protocol (MCP).
+- **AI Frameworks**: LangGraph, LlamaIndex, SmolAgents, Pydantic AI, etc.
+- **AI Providers**: OpenAI, Google Gemini, Anthropic, Hugging Face, etc.
+- **Observabilidade**: MLflow Tracing, Langfuse, Langtrace e Pydantic Logfire
 
-### Dia 2 - 🛠️ Hands-on Prático
+### Dia 2 - 🧑‍💻 Hands-on Prático
 
-- **Setup do Ambiente**: Configuração completa do ambiente de desenvolvimento
+- **Setup do Ambiente**: Configuração do ambiente de desenvolvimento
 - **Projeto Prático**: Construção de um sistema completo de análise de RH
-- **Implementação de Agentes**: Criação de agentes especializados para diferentes tarefas
-- **RAG e Ferramentas**: Integração de bases de conhecimento e APIs externas
-- **Observabilidade**: Monitoramento e debugging de sistemas agentivos
-- **Deploy e Produção**: Estratégias para colocar agentes em produção
+- **Conteúdo extra!**: Observabilidade e estratégias de deployment
 
 ## Feedback
 

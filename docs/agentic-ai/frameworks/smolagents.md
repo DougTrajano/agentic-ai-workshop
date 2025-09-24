@@ -1,34 +1,75 @@
 # 🐍 SmolAgents (Hugging Face)
 
-O **SmolAgents** é uma biblioteca minimalista da Hugging Face para agentes que "pensam em código", oferecendo uma abordagem mais programática.
+O **SmolAgents** é uma biblioteca minimalista da Hugging Face lançada em dezembro de 2024 para agentes que "pensam em código", oferecendo uma abordagem programática com apenas ~1.000 linhas de código core.
 
-## Características Principais
+## 🚀 Principais Características
 
-- **Code-based reasoning**: Agentes que geram e executam código Python
-- **Lightweight**: Biblioteca minimalista e fácil de entender
-- **Tool integration**: Integração simples com ferramentas Python
-- **Open source**: Transparente e customizável
+- **Code-based reasoning**: Agentes geram e executam código Python diretamente
+- **Ultra-lightweight**: Apenas ~1.000 linhas de código no arquivo principal
+- **Tool integration**: Integração nativa com Hugging Face Hub e tools
+- **Model agnostic**: Suporte para 40+ LLMs via LiteLLM
+- **Transparent**: Abordagem minimalista e fácil de entender
+- **Hub integration**: Compartilhamento de tools no Hugging Face Hub
 
-## Exemplo com SmolAgents
+## 📦 Instalação
+
+```bash
+pip install smolagents huggingface_hub transformers
+
+# Para usar modelos do Hugging Face
+pip install smolagents[hf]
+
+# Para usar OpenAI e outros providers
+pip install smolagents[openai]
+```
+
+## 💡 Exemplo Básico
 
 ```python
-from smolagents import CodeAgent, DuckDuckGoSearchTool, PythonInterpreterTool
+from smolagents import CodeAgent, DuckDuckGoSearchTool, HfApiModel
 
-# Configura ferramentas
-tools = [DuckDuckGoSearchTool(), PythonInterpreterTool()]
+# Configurar com modelo do HuggingFace (gratuito)
+agent = CodeAgent(
+    tools=[DuckDuckGoSearchTool()], 
+    model=HfApiModel()
+)
 
-# Cria agente
+# Execução direta
+result = agent.run(
+    "Pesquise sobre 'agentic AI' e me dê um resumo das principais tendências"
+)
+print(result)
+```
+
+## 🔧 Code Agents em Ação
+
+```python
+from smolagents import CodeAgent, PythonInterpreterTool, DuckDuckGoSearchTool
+
+# Agente com múltiplas ferramentas
+tools = [
+    DuckDuckGoSearchTool(),
+    PythonInterpreterTool()
+]
+
 agent = CodeAgent(
     tools=tools,
-    model="gpt-4",
+    model="openai:gpt-4",  # ou usar HfApiModel() para gratuito
     add_base_tools=True
 )
 
-# Executa tarefa
-result = agent.run(
-    "Pesquise sobre 'agentic AI' e crie um gráfico com as principais tendências"
-)
-```
+# Tarefa complexa que requer código
+result = agent.run("""
+Pesquise dados sobre o mercado de IA em 2024, 
+crie um DataFrame com os principais insights e 
+gere um gráfico de barras mostrando o crescimento por setor
+""")
+
+# O agente irá:
+# 1. Usar DuckDuckGoSearchTool para pesquisar
+# 2. Gerar código Python para processar dados  
+# 3. Criar DataFrame e gráfico usando matplotlib
+# 4. Executar código e retornar resultados
 
 ## Ferramentas Customizadas
 

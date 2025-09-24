@@ -654,12 +654,6 @@ class ToolAwareAgent:
         return "\n".join(response_parts) if response_parts else "Não foi possível processar a solicitação."
 ```
 
-## Próximos Passos
-
-- **[Memória em Agentes](memory.md)**: Aprenda sobre diferentes tipos de memória
-- **[RAG (Retrieval-Augmented Generation)](rag.md)**: Entenda como implementar sistemas RAG
-- **[Gerenciamento de Estado](state.md)**: Explore como gerenciar o estado dos agentes
-
 ---
 
 [^16]: [Building Effective AI Agents - Anthropic](https://www.anthropic.com/engineering/building-effective-agents)

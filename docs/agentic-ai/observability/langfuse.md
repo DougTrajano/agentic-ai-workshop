@@ -1,53 +1,610 @@
-# Langfuse
+# Langfuse - Observabilidade Open Source para LLMs
 
-O **Langfuse** é uma plataforma open-source de observabilidade especializada em LLMs, oferecendo recursos avançados de análise[^25].
+O **Langfuse** é a plataforma de observabilidade open-source que mais rapidamente cresce no ecossistema de LLMs. Oferece rastreamento profundo, análise de custos e avaliação automatizada de aplicações GenAI 🚀
 
-## 📊 Setup e Configuração
+## 🎯 Por que Langfuse?
+
+### 🔍 **Observabilidade Completa**
+- Captura inputs, outputs, metadados de cada interação LLM
+- Suporte multimodal (texto, imagens, áudio)
+- Traces hierárquicos para agentes complexos
+- Dashboard intuitivo para análise visual
+
+### 💰 **Rastreamento de Custos**
+- Monitor custos por modelo, usuário ou sessão
+- Análise detalhada de uso de tokens
+- Alertas automáticos de budget
+- ROI tracking para features
+
+### 📊 **Fundação para Avaliações**
+- Coleta dados para datasets de avaliação
+- Integração com ferramentas de evaluation
+- A/B testing de diferentes modelos
+- Feedback loops automatizados
+
+## 🛠️ Configuração Inicial
+
+### Instalação e Setup
 
 ```python
+# Instalação
+!pip install langfuse
+
+import os
 from langfuse import Langfuse
 from langfuse.decorators import observe
+from datetime import datetime
 
-# Inicialização
-langfuse = Langfuse(
-    secret_key="sk-...",
-    public_key="pk-...",
+# Configuração das credenciais
+os.environ["LANGFUSE_SECRET_KEY"] = "sk-lf-..."
+os.environ["LANGFUSE_PUBLIC_KEY"] = "pk-lf-..."
+os.environ["LANGFUSE_HOST"] = "https://cloud.langfuse.com"  # EU
+# os.environ["LANGFUSE_HOST"] = "https://us.cloud.langfuse.com"  # US
+
+# Inicialização do cliente
+langfuse = Langfuse()
+```
+
+### Configuração com Context Managers
+
+```python
+from langfuse import get_client
+
+# Cliente singleton para aplicação
+client = get_client()
+
+# Context manager para traces
+with client.start_as_current_span(name="user_request") as span:
+    span.update(input={"query": "Como está o tempo hoje?"})
+    
+    # Span aninhado para chamada LLM
+    with client.start_as_current_generation(
+        name="weather_response", 
+        model="gpt-4"
+    ) as generation:
+        response = chamar_llm("Como está o tempo hoje?")
+        generation.update(output={"content": response})
+    
+    span.update(output="Resposta sobre o tempo fornecida")
+
+# Flush em aplicações de curta duração
+client.flush()
+```
+
+## 📊 Decorator @observe - Instrumentação Simples
+
+### Uso Básico
+
+```python
+from langfuse.decorators import observe
+
+@observe()
+def processar_query_usuario(query: str, user_id: str) -> dict:
+    """
+    Função instrumentada automaticamente pelo Langfuse
+    Captura inputs, outputs, timing e exceptions
+    """
+    
+    # Processamento da query
+    resultado = {
+        "query_original": query,
+        "user_id": user_id,
+        "timestamp": datetime.now().isoformat(),
+        "resposta": gerar_resposta(query),
+        "metadata": {
+            "modelo": "gpt-4",
+            "temperatura": 0.7,
+            "tokens_utilizados": 245
+        }
+    }
+    
+    return resultado
+
+# Uso - tracing automático
+resposta = processar_query_usuario("Qual a capital do Brasil?", "user123")
+```
+
+### Instrumentação de Classes
+
+```python
+class AgenteIA:
+    """Agente com instrumentação completa"""
+    
+    def __init__(self, nome: str):
+        self.nome = nome
+        self.historico = []
+    
+    @observe(name="agente_planejamento")
+    def planejar_acao(self, contexto: dict) -> dict:
+        """Fase de planejamento do agente"""
+        
+        # Lógica de planejamento
+        plano = {
+            "etapas": [
+                "analisar_contexto",
+                "buscar_informacoes", 
+                "gerar_resposta"
+            ],
+            "prioridade": "alta",
+            "tempo_estimado": 30
+        }
+        
+        return plano
+    
+    @observe(name="agente_execucao")
+    def executar_plano(self, plano: dict) -> dict:
+        """Executa o plano gerado"""
+        
+        resultados = []
+        for etapa in plano["etapas"]:
+            resultado_etapa = self._executar_etapa(etapa)
+            resultados.append(resultado_etapa)
+        
+        return {
+            "status": "sucesso",
+            "resultados": resultados,
+            "tempo_execucao": 28.5
+        }
+    
+    @observe(name="etapa_individual")
+    def _executar_etapa(self, etapa: str) -> dict:
+        """Executa uma etapa específica"""
+        # Simulação de processamento
+        import time
+        time.sleep(0.1)
+        
+        return {
+            "etapa": etapa,
+            "status": "concluida",
+            "output": f"Resultado da {etapa}"
+        }
+
+# Uso do agente instrumentado
+agente = AgenteIA("AssistenteIA")
+plano = agente.planejar_acao({"usuario": "João", "query": "Análise de vendas"})
+resultado = agente.executar_plano(plano)
+```
+
+## 🔧 Integração com Frameworks Populares
+
+### LangChain + Langfuse
+
+```python
+from langfuse.callback import CallbackHandler
+from langchain.llms import OpenAI
+from langchain.chains import LLMChain
+from langchain.prompts import PromptTemplate
+
+# Configurar callback handler
+langfuse_handler = CallbackHandler(
+    secret_key="sk-lf-...",
+    public_key="pk-lf-...",
     host="https://cloud.langfuse.com"
 )
 
+# Chain com instrumentação automática
 @observe()
-def process_user_query(query: str, user_id: str):
-    """Função observada pelo Langfuse"""
-    # Automaticamente captura inputs, outputs, timing
-    result = agent.process(query, user_id)
-    return result
+def criar_chain_langchain():
+    """Cria chain LangChain com observabilidade"""
+    
+    template = """
+    Você é um assistente especializado em {dominio}.
+    
+    Pergunta: {pergunta}
+    Resposta detalhada:
+    """
+    
+    prompt = PromptTemplate(
+        input_variables=["dominio", "pergunta"],
+        template=template
+    )
+    
+    llm = OpenAI(
+        temperature=0.7,
+        callbacks=[langfuse_handler]  # Instrumentação automática
+    )
+    
+    chain = LLMChain(llm=llm, prompt=prompt)
+    
+    return chain
 
-# Trace manual detalhado
-def detailed_agent_trace():
-    trace = langfuse.trace(
-        name="agent_execution",
-        user_id="user_123",
-        session_id="session_456"
-    )
-    
-    # Span de planejamento
-    planning_span = trace.span(
-        name="planning",
-        input={"query": "Analyze sales data"},
-        start_time=datetime.now()
-    )
-    
-    # Execução do plano
-    plan = generate_plan()
-    planning_span.update(output=plan, end_time=datetime.now())
-    
-    # Span de execução
-    execution_span = trace.span(name="execution")
-    result = execute_plan(plan)
-    execution_span.update(output=result)
-    
-    return result
+# Uso com tracing automático
+chain = criar_chain_langchain()
+resposta = chain.run(
+    dominio="tecnologia",
+    pergunta="Como funciona machine learning?"
+)
 ```
+
+### OpenAI SDK + Langfuse
+
+```python
+from langfuse.openai import OpenAI
+
+# Cliente OpenAI instrumentado
+client = OpenAI()  # Usa automaticamente credenciais Langfuse
+
+@observe()
+def chat_com_openai(mensagens: list, modelo: str = "gpt-4") -> str:
+    """Chat com OpenAI e tracing automático"""
+    
+    response = client.chat.completions.create(
+        model=modelo,
+        messages=mensagens,
+        temperature=0.7,
+        max_tokens=500
+    )
+    
+    return response.choices[0].message.content
+
+# Uso - traces automáticos incluem tokens, custos, latência
+mensagens = [
+    {"role": "system", "content": "Você é um assistente útil"},
+    {"role": "user", "content": "Explique quantum computing"}
+]
+
+resposta = chat_com_openai(mensagens)
+```
+
+### LlamaIndex + Langfuse
+
+```python
+from llama_index.core import VectorStoreIndex, SimpleDirectoryReader
+from llama_index.core.callbacks import LlamaDebugHandler, CallbackManager
+from langfuse.llama_index import LlamaIndexCallbackHandler
+
+# Configurar callback para LlamaIndex
+langfuse_callback = LlamaIndexCallbackHandler(
+    secret_key="sk-lf-...",
+    public_key="pk-lf-...",
+    host="https://cloud.langfuse.com"
+)
+
+callback_manager = CallbackManager([langfuse_callback])
+
+@observe(name="rag_system")
+def criar_sistema_rag():
+    """Sistema RAG com observabilidade completa"""
+    
+    # Carregar documentos
+    documents = SimpleDirectoryReader("data/").load_data()
+    
+    # Criar índice com callback
+    index = VectorStoreIndex.from_documents(
+        documents,
+        callback_manager=callback_manager
+    )
+    
+    # Query engine
+    query_engine = index.as_query_engine(
+        callback_manager=callback_manager
+    )
+    
+    return query_engine
+
+# Uso - traces incluem retrieval, generation, scores
+rag_system = criar_sistema_rag()
+resposta = rag_system.query("Como otimizar performance de LLMs?")
+```
+
+## 📈 Análise de Custos e Performance
+
+### Dashboard de Custos
+
+```python
+from langfuse import Langfuse
+import pandas as pd
+from datetime import datetime, timedelta
+
+class AnaliseCustomizada:
+    """Classe para análises customizadas no Langfuse"""
+    
+    def __init__(self):
+        self.client = Langfuse()
+    
+    @observe(name="analise_custos")
+    def analisar_custos_periodo(self, dias: int = 30) -> dict:
+        """Analisa custos dos últimos N dias"""
+        
+        # Buscar traces do período
+        data_inicio = datetime.now() - timedelta(days=dias)
+        
+        # Usar API do Langfuse para buscar dados
+        traces = self.client.get_traces(
+            from_timestamp=data_inicio,
+            to_timestamp=datetime.now()
+        )
+        
+        custos_por_modelo = {}
+        custos_por_usuario = {}
+        total_tokens = 0
+        
+        for trace in traces:
+            # Analisar generations (chamadas LLM)
+            for generation in trace.generations:
+                modelo = generation.model
+                usuario = trace.user_id
+                
+                # Calcular custos
+                tokens_input = generation.usage.input_tokens
+                tokens_output = generation.usage.output_tokens
+                custo = self._calcular_custo(modelo, tokens_input, tokens_output)
+                
+                # Agregar por modelo
+                if modelo not in custos_por_modelo:
+                    custos_por_modelo[modelo] = 0
+                custos_por_modelo[modelo] += custo
+                
+                # Agregar por usuário
+                if usuario not in custos_por_usuario:
+                    custos_por_usuario[usuario] = 0
+                custos_por_usuario[usuario] += custo
+                
+                total_tokens += tokens_input + tokens_output
+        
+        return {
+            "periodo_dias": dias,
+            "custo_total": sum(custos_por_modelo.values()),
+            "custos_por_modelo": custos_por_modelo,
+            "custos_por_usuario": custos_por_usuario,
+            "total_tokens": total_tokens,
+            "custo_medio_por_request": sum(custos_por_modelo.values()) / len(traces)
+        }
+    
+    def _calcular_custo(self, modelo: str, tokens_input: int, tokens_output: int) -> float:
+        """Calcula custo baseado no modelo e tokens"""
+        precos = {
+            "gpt-4": {"input": 0.00003, "output": 0.00006},
+            "gpt-3.5-turbo": {"input": 0.000001, "output": 0.000002},
+            "claude-3": {"input": 0.000015, "output": 0.000075}
+        }
+        
+        if modelo not in precos:
+            return 0.0
+        
+        custo_input = tokens_input * precos[modelo]["input"]
+        custo_output = tokens_output * precos[modelo]["output"]
+        
+        return custo_input + custo_output
+
+# Análise de custos
+analise = AnaliseCustomizada()
+relatorio = analise.analisar_custos_periodo(7)  # Últimos 7 dias
+
+print(f"Custo total: ${relatorio['custo_total']:.4f}")
+print(f"Modelo mais caro: {max(relatorio['custos_por_modelo'], key=relatorio['custos_por_modelo'].get)}")
+```
+
+### Métricas de Performance
+
+```python
+@observe(name="performance_analysis")
+def analisar_performance_agente(agente_id: str):
+    """Analisa performance de um agente específico"""
+    
+    client = Langfuse()
+    
+    # Buscar traces do agente
+    traces = client.get_traces(
+        tags=["agent_id:" + agente_id],
+        limit=1000
+    )
+    
+    latencias = []
+    taxa_sucesso = []
+    custos = []
+    
+    for trace in traces:
+        # Calcular latência
+        if trace.end_time and trace.start_time:
+            latencia = (trace.end_time - trace.start_time).total_seconds()
+            latencias.append(latencia)
+        
+        # Taxa de sucesso (sem errors)
+        sucesso = len([s for s in trace.spans if s.level == "ERROR"]) == 0
+        taxa_sucesso.append(sucesso)
+        
+        # Custos
+        custo_trace = sum(
+            calcular_custo_generation(gen) 
+            for gen in trace.generations
+        )
+        custos.append(custo_trace)
+    
+    # Estatísticas
+    stats = {
+        "total_execucoes": len(traces),
+        "latencia_media": np.mean(latencias),
+        "latencia_p95": np.percentile(latencias, 95),
+        "taxa_sucesso": np.mean(taxa_sucesso),
+        "custo_medio": np.mean(custos),
+        "custo_total": sum(custos)
+    }
+    
+    return stats
+```
+
+## 🎯 Avaliação e Feedback
+
+### Coleta de Feedback
+
+```python
+@observe(name="chat_com_feedback")
+def chat_com_coleta_feedback(query: str, user_id: str):
+    """Chat que coleta feedback automaticamente"""
+    
+    # Gerar resposta
+    resposta = gerar_resposta_llm(query)
+    
+    # Simular coleta de feedback (seria via UI)
+    feedback_score = simular_feedback_usuario()  # 1-5 stars
+    
+    # Registrar no trace atual
+    langfuse.score(
+        name="user_satisfaction",
+        value=feedback_score,
+        comment=f"Feedback para query: {query[:50]}..."
+    )
+    
+    return resposta
+
+def simular_feedback_usuario():
+    """Simula feedback do usuário"""
+    import random
+    return random.randint(1, 5)
+```
+
+### A/B Testing
+
+```python
+import random
+from typing import Literal
+
+@observe(name="ab_test_agent")
+def executar_ab_test(query: str, user_id: str) -> dict:
+    """Executa A/B test entre diferentes configurações"""
+    
+    # Determinar variante
+    variante: Literal["A", "B"] = random.choice(["A", "B"])
+    
+    # Configurações diferentes
+    config = {
+        "A": {"model": "gpt-4", "temperature": 0.7},
+        "B": {"model": "gpt-3.5-turbo", "temperature": 0.9}
+    }
+    
+    # Tag no trace para análise posterior
+    langfuse.current_span().update(
+        tags=["ab_test", f"variant_{variante}"]
+    )
+    
+    # Executar com configuração
+    resposta = executar_agente(query, config[variante])
+    
+    return {
+        "resposta": resposta,
+        "variante": variante,
+        "config": config[variante]
+    }
+
+# Análise de resultados A/B
+def analisar_resultados_ab():
+    """Analisa resultados do A/B test"""
+    client = Langfuse()
+    
+    traces_a = client.get_traces(tags=["variant_A"])
+    traces_b = client.get_traces(tags=["variant_B"])
+    
+    # Comparar métricas
+    scores_a = [t.scores[0].value for t in traces_a if t.scores]
+    scores_b = [t.scores[0].value for t in traces_b if t.scores]
+    
+    print(f"Variante A - Satisfação média: {np.mean(scores_a):.2f}")
+    print(f"Variante B - Satisfação média: {np.mean(scores_b):.2f}")
+```
+
+## 🚀 Produção e Monitoramento
+
+### Alertas Automáticos
+
+```python
+from langfuse import Langfuse
+import schedule
+import time
+
+class MonitorLangfuse:
+    """Sistema de monitoramento com alertas"""
+    
+    def __init__(self):
+        self.client = Langfuse()
+        self.thresholds = {
+            "latencia_max": 10.0,  # segundos
+            "taxa_erro_max": 0.05,  # 5%
+            "custo_diario_max": 100.0  # USD
+        }
+    
+    @observe(name="health_monitoring")
+    def verificar_saude_sistema(self):
+        """Verifica saúde do sistema"""
+        
+        # Últimas 100 execuções
+        traces_recentes = self.client.get_traces(limit=100)
+        
+        # Calcular métricas
+        latencias = self._extrair_latencias(traces_recentes)
+        taxa_erro = self._calcular_taxa_erro(traces_recentes)
+        custo_recente = self._calcular_custos_recentes()
+        
+        # Verificar thresholds
+        alertas = []
+        
+        if np.mean(latencias) > self.thresholds["latencia_max"]:
+            alertas.append(f"Latência alta: {np.mean(latencias):.2f}s")
+        
+        if taxa_erro > self.thresholds["taxa_erro_max"]:
+            alertas.append(f"Taxa de erro alta: {taxa_erro:.2%}")
+        
+        if custo_recente > self.thresholds["custo_diario_max"]:
+            alertas.append(f"Custo diário alto: ${custo_recente:.2f}")
+        
+        # Enviar alertas se necessário
+        if alertas:
+            self._enviar_alertas(alertas)
+        
+        return {
+            "status": "healthy" if not alertas else "warning",
+            "alertas": alertas,
+            "metricas": {
+                "latencia_media": np.mean(latencias),
+                "taxa_erro": taxa_erro,
+                "custo_recente": custo_recente
+            }
+        }
+    
+    def _enviar_alertas(self, alertas: list):
+        """Envia alertas via webhook/email"""
+        for alerta in alertas:
+            print(f"🚨 ALERTA LANGFUSE: {alerta}")
+            # Implementar integração com Slack/Discord/Email
+
+# Configurar monitoramento automático
+monitor = MonitorLangfuse()
+
+# Verificar a cada 10 minutos
+schedule.every(10).minutes.do(monitor.verificar_saude_sistema)
+
+# Loop de monitoramento
+while True:
+    schedule.run_pending()
+    time.sleep(60)
+```
+
+## 🎓 Melhores Práticas
+
+### ✅ **Faça**
+- Use o decorator `@observe` para instrumentação fácil
+- Configure tags consistentes para queries eficientes
+- Implemente coleta de feedback dos usuários
+- Monitore custos por usuário/feature
+- Use traces para criar datasets de avaliação
+
+### ❌ **Evite**
+- Expor dados sensíveis nos traces
+- Ignorar configuração de sampling em alta escala
+- Misturar experimentos sem tags claras
+- Depender apenas de métricas técnicas
+- Não definir alertas de custo
+
+## 🔗 Recursos Adicionais
+
+- [Documentação Oficial Langfuse](https://langfuse.com/docs)
+- [Integrações Suportadas](https://langfuse.com/docs/integrations)
+- [Cookbook de Exemplos](https://langfuse.com/docs/cookbook)
+- [Self-Hosting Guide](https://langfuse.com/docs/deployment)
+
+---
+
+**Próximo:** [Langtrace - Observabilidade Nativa](langtrace.md) 🚀
 
 ## 🔍 Análise Avançada com Langfuse
 
@@ -410,12 +967,6 @@ class LangfuseDebugger:
         
         return debug_info
 ```
-
-## Próximos Passos
-
-- Explore **[Langtrace](langtrace.md)** para integração com OpenTelemetry
-- Confira **[Pydantic Logfire](logfire.md)** para observabilidade nativa
-- Veja **[Estratégias de Monitoramento](strategies.md)** para alertas avançados
 
 ---
 

@@ -192,9 +192,3 @@ class MemoryRAGSystem:
         
         return context
 ```
-
-## Próximos Passos
-
-- **[RAG (Retrieval-Augmented Generation)](rag.md)**: Aprenda a implementar sistemas de recuperação de conhecimento
-- **[Gerenciamento de Estado](state.md)**: Explore como gerenciar o estado dos agentes
-- **[Ferramentas e MCP](tools.md)**: Descubra como integrar ferramentas aos agentes

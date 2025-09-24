@@ -1,8 +1,8 @@
 # Técnicas de Prompt Engineering
 
-O **Prompt Engineering** é a arte e ciência de comunicar efetivamente com modelos de linguagem para obter os melhores resultados. Para sistemas agentivos, estas técnicas são fundamentais para orientar o comportamento dos agentes.
+O **Prompt Engineering** é a arte de comunicar efetivamente com modelos de linguagem para obter os melhores resultados. Para sistemas agentivos, estas técnicas são fundamentais para orientar o comportamento dos agentes.
 
-## 🎭 Prompts Baseados em Papéis
+## 🎭 Role-based Prompts
 
 Criar prompts eficazes baseados em papéis vai além de simplesmente dizer "Aja como um especialista". Você precisa ser específico sobre os atributos da persona, incluindo personalidade, estilo de comunicação, vocabulário e áreas de especialização.
 
@@ -97,7 +97,7 @@ Sentimento:
 
 ## 🧠 Chain-of-Thought (CoT) Prompting
 
-O **Chain-of-Thought** encoraja o modelo a expor seu raciocínio intermediário, melhorando respostas em tarefas complexas[^8].
+O **Chain-of-Thought** encoraja o modelo a expor seu raciocínio intermediário, melhorando respostas em tarefas complexas[^1].
 
 ### CoT Básico
 
@@ -154,7 +154,7 @@ Pensamento:
 
 ## 🔄 Meta-Prompting
 
-**Meta-prompting** foca na estrutura abstrata da tarefa, usando instruções ou modelos sintáticos que guiam o formato da resposta[^9].
+**Meta-prompting** foca na estrutura abstrata da tarefa, usando instruções ou modelos sintáticos que guiam o formato da resposta[^2].
 
 ### Template de Meta-Prompt
 
@@ -500,15 +500,7 @@ class PromptLibrary:
         return template.format(**kwargs)
 ```
 
-## Próximos Passos
-
-Com técnicas sólidas de prompt engineering, você está pronto para:
-
-1. **[AI Agents 101](agents/index.md)**: Construir agentes com prompts eficazes
-2. **[Frameworks](frameworks/index.md)**: Aplicar prompting em diferentes frameworks
-3. **[Context Engineering](context-engineering.md)**: Otimizar contexto dinamicamente
-
 ---
 
-[^8]: [Chain-of-Thought Prompting - Prompt Engineering Guide](https://www.promptingguide.ai/techniques/cot)
-[^9]: [Meta Prompting - Prompt Engineering Guide](https://www.promptingguide.ai/techniques/meta-prompting)
+[^1]: [Chain-of-Thought Prompting - Prompt Engineering Guide](https://www.promptingguide.ai/techniques/cot)
+[^2]: [Meta Prompting - Prompt Engineering Guide](https://www.promptingguide.ai/techniques/meta-prompting)

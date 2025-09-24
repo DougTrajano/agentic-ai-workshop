@@ -1,117 +1,414 @@
-# MLflow Tracing
+# MLflow para Observabilidade de IA
 
-O **MLflow Tracing** é uma ferramenta open-source que aprimora a observabilidade de LLMs registrando inputs, outputs e metadados de cada passo[^23].
+O **MLflow** é uma plataforma open-source que revolucionou o gerenciamento de projetos de machine learning. Com a versão 3.x, introduziu recursos especializados para observabilidade de aplicações GenAI, incluindo rastreamento detalhado de LLMs e agentes multi-step 🚀
 
-## 🛠️ Configuração Básica
+## 🎯 Por que MLflow para Agentes de IA?
+
+O MLflow resolve três desafios críticos na observabilidade de agentes:
+
+### 🔍 **Observabilidade**
+- Monitora cada etapa de execução em tempo real
+- Visualiza logs estruturados e traces hierárquicos  
+- Captura inputs, outputs e metadados de cada operação
+
+### 🤖 **Explicabilidade**  
+- Identifica exatamente qual prompt foi enviado ao modelo
+- Rastreia o processo de tomada de decisão do agente
+- Facilita debugging quando resultados são inesperados
+
+### 📈 **Rastreabilidade**
+- Reproduz issues específicas com contexto completo
+- Mantém histórico de performance e comportamento
+- Permite análise comparativa entre diferentes versões
+
+## 🛠️ Configuração Inicial
+
+### Instalação e Setup
 
 ```python
-import mlflow
-from mlflow.tracing import trace
+# Instalação
+!pip install mlflow[genai]
 
-# Configuração do MLflow
-mlflow.set_tracking_uri("http://localhost:5000")
-mlflow.set_experiment("agentic_ai_workshop")
+import mlflow
+import os
+from mlflow.tracing import trace
+from datetime import datetime
+
+# Configuração básica
+mlflow.set_tracking_uri("http://localhost:5000")  # Local
+# ou mlflow.set_tracking_uri("databricks")  # Databricks
+
+# Criar experimento
+experiment_name = "agentic-ai-workshop"
+mlflow.set_experiment(experiment_name)
+```
+
+### Configuração de Ambiente
+
+```python
+# Configurar variáveis de ambiente para diferentes provedores
+os.environ["OPENAI_API_KEY"] = "sua-chave-openai"
+os.environ["ANTHROPIC_API_KEY"] = "sua-chave-anthropic"
+
+# Habilitar autolog para integração automática
+mlflow.llm.autolog(
+    log_inputs_outputs=True,
+    log_models=True,
+    log_traces=True,
+    disable=False
+)
+```
+
+## 📊 Tracing Básico de Agentes
+
+### Decorator @trace para Funções
+
+```python
+from mlflow.tracing import trace
 
 @trace(name="agent_execution")
-def run_agent(query: str, user_id: str):
-    with mlflow.start_run():
-        # Log da query inicial
-        mlflow.log_param("query", query)
-        mlflow.log_param("user_id", user_id)
-        
-        # Execução do agente com tracing
-        result = agent.run(query)
-        
-        # Log dos resultados
-        mlflow.log_metric("response_time", result.execution_time)
-        mlflow.log_metric("token_count", result.token_usage)
-        mlflow.log_text(result.response, "agent_response.txt")
-        
-        return result
+def executar_agente(query: str, user_id: str) -> dict:
+    """Executa agente com tracing automático"""
+    
+    # MLflow captura automaticamente inputs/outputs
+    resultado = {
+        "query": query,
+        "user_id": user_id,
+        "timestamp": datetime.now(),
+        "response": processar_query(query),
+        "metadata": {"model": "gpt-4", "temperature": 0.7}
+    }
+    
+    return resultado
+
+# Uso
+response = executar_agente("Qual é a previsão do tempo?", "user123")
 ```
 
-## 📊 Tracing Detalhado de Agentes
+### Context Managers para Controle Granular
 
 ```python
+def agente_complexo(input_data: dict):
+    with mlflow.start_run(run_name="agente_multimodal"):
+        
+        # Etapa 1: Análise de entrada
+        with mlflow.start_span(name="analise_entrada") as span1:
+            span1.set_inputs({"user_input": input_data})
+            
+            entrada_processada = processar_entrada(input_data)
+            
+            span1.set_outputs({"processed_input": entrada_processada})
+            span1.set_attributes({
+                "input_type": type(input_data).__name__,
+                "processing_time": 0.5
+            })
+        
+        # Etapa 2: Geração LLM
+        with mlflow.start_span(name="llm_generation") as span2:
+            span2.set_inputs({"prompt": entrada_processada})
+            
+            resposta_llm = chamar_llm(entrada_processada)
+            
+            span2.set_outputs({"llm_response": resposta_llm})
+            span2.set_attributes({
+                "model": "gpt-4",
+                "tokens_input": 150,
+                "tokens_output": 200,
+                "cost": 0.012
+            })
+        
+        # Etapa 3: Pós-processamento
+        with mlflow.start_span(name="pos_processamento") as span3:
+            resultado_final = pos_processar(resposta_llm)
+            
+            span3.set_outputs({"final_result": resultado_final})
+        
+        # Métricas do run geral
+        mlflow.log_metrics({
+            "total_tokens": 350,
+            "total_cost": 0.012,
+            "execution_time": 2.1,
+            "user_satisfaction": 0.85
+        })
+        
+        return resultado_final
+```
+
+## 🔧 Integrações com Frameworks Populares
+
+### LangChain + MLflow
+
+```python
+from langchain.llms import OpenAI
+from langchain.agents import create_react_agent, AgentExecutor
+from langchain.tools import Tool
+import mlflow.langchain
+
+# Auto-instrumentação do LangChain
+mlflow.langchain.autolog()
+
+@trace(name="langchain_agent")
+def criar_agente_langchain():
+    # Definir tools
+    def calculadora(expression: str) -> str:
+        """Calcula expressões matemáticas"""
+        try:
+            return str(eval(expression))
+        except:
+            return "Erro no cálculo"
+    
+    tools = [
+        Tool(
+            name="Calculadora",
+            func=calculadora,
+            description="Útil para cálculos matemáticos"
+        )
+    ]
+    
+    # Criar agente
+    llm = OpenAI(temperature=0)
+    agent = create_react_agent(llm, tools)
+    agent_executor = AgentExecutor(agent=agent, tools=tools, verbose=True)
+    
+    return agent_executor
+
+# Uso com tracing automático
+agente = criar_agente_langchain()
+resultado = agente.invoke({
+    "input": "Calcule a raiz quadrada de 144 e multiplique por 3"
+})
+```
+
+### AutoGen + MLflow
+
+```python
+import autogen
 from mlflow.tracing import trace
-from typing import Any, Dict
 
-class TracedAgent:
-    def __init__(self, name: str):
-        self.name = name
-        self.tools = {}
+# Configuração de agentes AutoGen
+config_list = [
+    {
+        "model": "gpt-4",
+        "api_key": os.environ["OPENAI_API_KEY"]
+    }
+]
+
+@trace(name="autogen_multiagent")
+def criar_sistema_multiagente():
+    """Sistema com múltiplos agentes especializados"""
     
-    @trace(name="agent_planning")
-    def plan_action(self, context: Dict[str, Any]) -> Dict[str, Any]:
-        """Traces the planning phase"""
-        with mlflow.start_span(name="planning") as span:
-            span.set_inputs({"context": context})
-            
-            # Lógica de planejamento
-            plan = self._generate_plan(context)
-            
-            span.set_outputs({"plan": plan})
-            span.set_attribute("plan_complexity", len(plan["steps"]))
-            
-            return plan
+    # Agente Assistente
+    assistente = autogen.AssistantAgent(
+        name="assistente",
+        llm_config={"config_list": config_list},
+        system_message="Você é um assistente especializado em análise de dados."
+    )
     
-    @trace(name="tool_execution")
-    def execute_tool(self, tool_name: str, params: Dict) -> Any:
-        """Traces tool execution"""
-        with mlflow.start_span(name=f"tool_{tool_name}") as span:
-            span.set_inputs({"tool": tool_name, "params": params})
-            
-            try:
-                result = self.tools[tool_name].execute(params)
-                span.set_outputs({"result": result})
-                span.set_attribute("execution_status", "success")
-                return result
-            except Exception as e:
-                span.set_attribute("execution_status", "error")
-                span.set_attribute("error_message", str(e))
-                raise
+    # Agente Crítico  
+    critico = autogen.AssistantAgent(
+        name="critico",
+        llm_config={"config_list": config_list},
+        system_message="Você revisa e melhora análises, identificando pontos fracos."
+    )
+    
+    # Usuário Proxy
+    user_proxy = autogen.UserProxyAgent(
+        name="user_proxy",
+        human_input_mode="NEVER",
+        max_consecutive_auto_reply=10,
+        code_execution_config={"work_dir": "autogen_workspace"}
+    )
+    
+    return assistente, critico, user_proxy
+
+# Execução com tracing
+assistente, critico, user_proxy = criar_sistema_multiagente()
+
+with mlflow.start_run(run_name="analise_multiagente"):
+    user_proxy.initiate_chat(
+        assistente,
+        message="Analise as vendas do último trimestre e identifique tendências."
+    )
 ```
 
-## 📈 Dashboard no MLflow UI
+## 🎨 Dashboard e Visualização
+
+### Interface Web do MLflow
 
 ```python
-# Visualização de métricas agregadas
-def log_aggregate_metrics():
-    # Calcula métricas dos últimos 100 runs
-    recent_runs = mlflow.search_runs(
+# Iniciar servidor MLflow UI
+# No terminal: mlflow ui --host 0.0.0.0 --port 5000
+
+# Ou programaticamente
+import subprocess
+
+def iniciar_mlflow_ui(port: int = 5000):
+    """Inicia interface web do MLflow"""
+    subprocess.Popen([
+        "mlflow", "ui", 
+        "--host", "0.0.0.0",
+        "--port", str(port),
+        "--backend-store-uri", "sqlite:///mlflow.db"
+    ])
+    
+    print(f"MLflow UI disponível em http://localhost:{port}")
+
+# Iniciar dashboard
+iniciar_mlflow_ui()
+```
+
+### Consultas e Análises Programáticas
+
+```python
+from mlflow import MlflowClient
+import pandas as pd
+
+def analisar_experimentos(experiment_name: str):
+    """Analisa resultados de experimentos"""
+    client = MlflowClient()
+    
+    # Buscar experimento
+    experiment = client.get_experiment_by_name(experiment_name)
+    
+    # Buscar runs do experimento
+    runs = client.search_runs(
         experiment_ids=[experiment.experiment_id],
+        order_by=["start_time DESC"],
         max_results=100
     )
     
-    # Métricas agregadas
-    avg_response_time = recent_runs['metrics.response_time'].mean()
-    total_cost = recent_runs['metrics.cost'].sum()
-    success_rate = (recent_runs['tags.status'] == 'success').mean()
+    # Converter para DataFrame
+    runs_data = []
+    for run in runs:
+        run_data = {
+            "run_id": run.info.run_id,
+            "status": run.info.status,
+            "start_time": run.info.start_time,
+            "duration": run.info.end_time - run.info.start_time if run.info.end_time else None,
+            **run.data.params,
+            **run.data.metrics
+        }
+        runs_data.append(run_data)
     
-    # Log no dashboard
-    with mlflow.start_run(run_name="dashboard_metrics"):
-        mlflow.log_metrics({
-            "avg_response_time_last_100": avg_response_time,
-            "total_cost_last_100": total_cost,
-            "success_rate_last_100": success_rate
-        })
+    df = pd.DataFrame(runs_data)
+    
+    # Análises básicas
+    print(f"Total de runs: {len(df)}")
+    if 'precisao' in df.columns:
+        print(f"Precisão média: {df['precisao'].mean():.3f}")
+    if 'latencia_media' in df.columns:
+        print(f"Latência média: {df['latencia_media'].mean():.3f}s")
+    if 'custo_total_usd' in df.columns:
+        print(f"Custo total: ${df['custo_total_usd'].sum():.4f}")
+    
+    return df
+
+# Usar análise
+df_resultados = analisar_experimentos("agentic-ai-workshop")
 ```
 
-## 🔍 Análise de Traces
+## 🚀 Padrões de Produção
 
-### Busca e Filtragem
+### Monitoramento Contínuo
 
 ```python
-class MLflowAnalyzer:
-    def __init__(self):
-        self.client = mlflow.tracking.MlflowClient()
+import schedule
+import time
+from datetime import datetime
+
+class MonitorAgente:
+    """Classe para monitoramento contínuo de agentes em produção"""
     
-    def analyze_failed_runs(self, experiment_id: str):
-        """Analisa runs que falharam"""
-        failed_runs = mlflow.search_runs(
-            experiment_ids=[experiment_id],
-            filter_string="tags.status = 'failed'"
-        )
+    def __init__(self, agente, alertas_config: Dict):
+        self.agente = agente
+        self.alertas = alertas_config
+        self.metricas_buffer = []
+    
+    @trace(name="health_check")
+    def verificar_saude(self):
+        """Verifica saúde do agente"""
+        try:
+            start_time = time.time()
+            
+            # Query de teste padrão
+            resultado = self.agente.run("Teste de saúde - responda 'OK'")
+            
+            latencia = time.time() - start_time
+            
+            # Log métricas de saúde
+            with mlflow.start_run(run_name="health_check"):
+                mlflow.log_metrics({
+                    "latencia_health_check": latencia,
+                    "status": 1 if "OK" in resultado else 0,
+                    "timestamp": time.time()
+                })
+            
+            # Verificar alertas
+            if latencia > self.alertas.get("max_latencia", 10.0):
+                self.enviar_alerta(f"Latência alta: {latencia:.2f}s")
+            
+            return True
+            
+        except Exception as e:
+            # Log erro
+            with mlflow.start_run(run_name="health_check_error"):
+                mlflow.log_param("error", str(e))
+                mlflow.log_metric("status", 0)
+            
+            self.enviar_alerta(f"Falha no health check: {e}")
+            return False
+    
+    def enviar_alerta(self, mensagem: str):
+        """Envia alertas (implementar integração com Slack, email, etc.)"""
+        print(f"🚨 ALERTA: {mensagem} - {datetime.now()}")
+        
+        # Integração com Slack (exemplo)
+        # slack_webhook_url = "https://hooks.slack.com/services/..."
+        # requests.post(slack_webhook_url, json={"text": mensagem})
+
+# Configurar monitoramento
+monitor = MonitorAgente(
+    agente=meu_agente,
+    alertas_config={
+        "max_latencia": 5.0,
+        "min_precisao": 0.8
+    }
+)
+
+# Agendar verificações periódicas
+schedule.every(5).minutes.do(monitor.verificar_saude)
+
+# Loop de monitoramento
+while True:
+    schedule.run_pending()
+    time.sleep(60)
+```
+
+## 🎓 Melhores Práticas
+
+### ✅ **Faça**
+- Use nomes descritivos para spans e traces
+- Registre inputs/outputs de todas as operações críticas  
+- Configure alertas baseados em métricas de negócio
+- Mantenha histórico de experimentos para análise comparativa
+- Use tags consistentes para facilitar buscas
+
+### ❌ **Evite**  
+- Logging excessivo que impacta performance
+- Expor informações sensíveis nos logs
+- Ignorar custos de armazenamento de traces
+- Misturar experimentos sem organização clara
+- Depender apenas de métricas técnicas (ignorar UX)
+
+## 🔗 Recursos Adicionais
+
+- [Documentação Oficial MLflow](https://mlflow.org/docs/latest/tracing.html)
+- [MLflow GenAI Examples](https://github.com/mlflow/mlflow/tree/master/examples/genai)
+- [Tutorial Avançado de Tracing](https://mlflow.org/docs/latest/llms/tracing/tutorials/)
+
+---
+
+**Próximo:** [Langfuse - Observabilidade Open Source](langfuse.md) 🚀
         
         failure_patterns = {}
         for _, run in failed_runs.iterrows():
