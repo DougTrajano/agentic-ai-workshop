@@ -75,7 +75,6 @@ Geram dados (ex.: imagens de alta qualidade) aplicando ruído sucessivo nos dado
 
 ![Google Gemini 2.5 Flash Image (Nano Banana)](https://www.gstatic.com/aistudio/welcome/v3/native_image_generation_hero.png)
 
-```python
 ## 🌍 Multimodal Models
 
 Processam múltiplas modalidades (texto, imagem, áudio, vídeo) simultaneamente[^6]. Exemplos incluem:
