@@ -122,7 +122,7 @@ Para carregar o dataset no Python, você pode usar o seguinte código:
 from datasets import load_dataset
 
 
-# Carregar todas as tabelas
+# Load dataset tables
 business_units = load_dataset("dougtrajano/hr-synthetic-database", "business_units")
 departments = load_dataset("dougtrajano/hr-synthetic-database", "departments")
 jobs = load_dataset("dougtrajano/hr-synthetic-database", "jobs")
@@ -136,6 +136,9 @@ Para converter as tabelas de employees e compensations em Pandas DataFrames:
 import pandas as pd
 
 
+df_business_units = pd.DataFrame(business_units['train'])
+df_departments = pd.DataFrame(departments['train'])
+df_jobs = pd.DataFrame(jobs['train'])
 df_employees = pd.DataFrame(employees['train'])
 df_compensations = pd.DataFrame(compensations['train'])
 ```

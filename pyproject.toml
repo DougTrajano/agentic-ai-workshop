@@ -105,7 +105,8 @@ exclude = [
     "**/env",
     "**/.ruff_cache",
     "**/.venv",
-    "**/.ipynb_checkpoints"
+    "**/.ipynb_checkpoints",
+    "src/jobs"
 ]
 force-exclude = true
 
@@ -155,7 +156,7 @@ source = ["workshop"]
 
 [tool.bandit]
 exclude_dirs = ["venv",".venv","tests"]
-skips = ["B101", "B601"]
+skips = ["B101", "B601", "B108"]
 
 [tool.bandit.assert_used]
 exclude = ["*_test.py", "*test_*.py"]

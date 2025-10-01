@@ -1,0 +1,13 @@
+bundle:
+  name: agentic_ai_workshop
+
+include:
+  - databricks/*.yml
+
+workspace:
+  host: https://adb-438295978505420.0.azuredatabricks.net
+
+targets:
+  dev:
+    default: true
+    mode: development

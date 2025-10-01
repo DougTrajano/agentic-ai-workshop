@@ -1,0 +1,24 @@
+resources:
+  jobs:
+    download_dataset:
+      name: Download HR Synthetic Dataset
+
+      tasks:
+        - task_key: download_dataset
+          notebook_task:
+            notebook_path: ../src/jobs/download_dataset.py
+
+          # The key that references an environment spec in a job.
+          environment_key: default
+
+      # A list of task execution environment specifications that can be referenced by tasks of this job.
+      environments:
+        - environment_key: default
+
+          # Full documentation of this spec can be found at:
+          # https://docs.databricks.com/api/workspace/jobs/create#environments-spec
+          spec:
+            environment_version: "1"
+            dependencies:
+              - datasets
+              - pandas
