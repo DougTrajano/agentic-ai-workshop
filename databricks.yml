@@ -4,10 +4,22 @@ bundle:
 include:
   - databricks/*.yml
 
-workspace:
-  host: https://adb-438295978505420.0.azuredatabricks.net
+variables:
+  base_name:
+    default: "agentic-ai-workshop"
+    description: Base name for all resources
+
+  catalog:
+    default: doug
+    description: Unity Catalog name
+
+  schema:
+    default: agentic_ai_workshop
+    description: Unity Catalog schema name
 
 targets:
   dev:
-    default: true
     mode: development
+    default: true
+    workspace:
+      host: https://adb-438295978505420.0.azuredatabricks.net

@@ -1,12 +1,15 @@
 resources:
   jobs:
     download_dataset:
-      name: Download HR Synthetic Dataset
+      name: ${var.base_name}-download-dataset
 
       tasks:
         - task_key: download_dataset
           notebook_task:
             notebook_path: ../src/jobs/download_dataset.py
+            base_parameters:
+              catalog: ${var.catalog}
+              schema: ${var.schema}
 
           # The key that references an environment spec in a job.
           environment_key: default
@@ -20,5 +23,5 @@ resources:
           spec:
             environment_version: "1"
             dependencies:
-              - datasets
-              - pandas
+              - datasets==4.1.1
+              - pandas==2.3.3

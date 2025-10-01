@@ -1,0 +1,47 @@
+resources:
+  jobs:
+    setup_app_database:
+      name: ${var.base_name}-setup-app-db
+      description: "Setup Lakebase PostgreSQL database and tables for development"
+      tasks:
+        - task_key: setup_app_database
+          notebook_task:
+            notebook_path: ./src/apps/scripts/setup_chainlit_lakebase.ipynb
+          environment_key: default
+      environments:
+        - environment_key: default
+          spec:
+            environment_version: "1"
+            dependencies:
+              - sqlalchemy==2.0.43
+              - psycopg[binary]==3.2.9
+              - databricks-sdk==0.65.0
+      parameters:
+        - name: instance_name
+          default: ${var.base_name}-lakebase
+        - name: database
+          default: ${var.base_name}-lakebase
+        - name: app_name
+          default: ${var.base_name}-chat-app
+        - name: port
+          default: "5432"
+
+  database_instances:
+    app-database:
+      name: ${var.base_name}-lakebase
+      capacity: CU_1
+
+  apps:
+    chat-app:
+      name: ${var.base_name}-chat-app
+      description: AI-powered People Analytics Agent
+      resources:
+        - name: database
+          database:
+            database_name: ${var.base_name}-lakebase
+            instance_name: ${var.base_name}-lakebase
+            permission: CAN_CONNECT_AND_CREATE
+      source_code_path: ./src/app
+      permissions:
+        - level: "CAN_USE"
+          user_name: ${var.user_name}
