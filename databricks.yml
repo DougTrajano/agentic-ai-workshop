@@ -6,7 +6,7 @@ include:
 
 variables:
   base_name:
-    default: "agentic-ai-workshop"
+    default: agentic-ai-workshop
     description: Base name for all resources
 
   catalog:
@@ -16,6 +16,14 @@ variables:
   schema:
     default: agentic_ai_workshop
     description: Unity Catalog schema name
+
+  user_name:
+    description: User name for permissions
+    default: douglas.trajano@outlook.com
+
+  database_name:
+    description: Name of the database to create
+    default: agentic_ai_workshop_db
 
 targets:
   dev:

@@ -1,0 +1,17 @@
+chainlit==2.8.1
+databricks_sdk==0.67.0
+langchain_community==0.3.30
+langchain_core==0.3.78
+langchain_openai==0.3.34
+langgraph==0.6.8
+numexpr==2.11.0
+openai==1.109.1
+pandas==2.3.3
+plotly==6.3.0
+psycopg[binary]==3.2.10
+pydantic==2.11.10
+pydantic_settings==2.11.0
+PyJWT==2.10.1
+SQLAlchemy==2.0.43
+starlette==0.48.0
+typing_extensions==4.15.0

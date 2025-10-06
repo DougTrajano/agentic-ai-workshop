@@ -6,21 +6,12 @@ resources:
       tasks:
         - task_key: setup_app_database
           notebook_task:
-            notebook_path: ./src/apps/scripts/setup_chainlit_lakebase.ipynb
-          environment_key: default
-      environments:
-        - environment_key: default
-          spec:
-            environment_version: "1"
-            dependencies:
-              - sqlalchemy==2.0.43
-              - psycopg[binary]==3.2.9
-              - databricks-sdk==0.65.0
+            notebook_path: ../src/jobs/setup_app_lakebase.py
       parameters:
         - name: instance_name
-          default: ${var.base_name}-lakebase
+          default: ${resources.database_instances.app-database.name}
         - name: database
-          default: ${var.base_name}-lakebase
+          default: ${var.database_name}
         - name: app_name
           default: ${var.base_name}-chat-app
         - name: port
@@ -31,17 +22,30 @@ resources:
       name: ${var.base_name}-lakebase
       capacity: CU_1
 
+  database_catalogs:
+    agentic-ai-workshop:
+      database_instance_name: ${resources.database_instances.app-database.name}
+      name: ${var.base_name}-catalog
+      database_name: ${var.database_name}
+      create_database_if_not_exists: true
+
   apps:
     chat-app:
       name: ${var.base_name}-chat-app
       description: AI-powered People Analytics Agent
       resources:
-        - name: database
+        - name: LAKEBASE
           database:
-            database_name: ${var.base_name}-lakebase
-            instance_name: ${var.base_name}-lakebase
+            database_name: ${resources.database_catalogs.agentic-ai-workshop.database_name}
+            instance_name: ${resources.database_catalogs.agentic-ai-workshop.database_instance_name}
             permission: CAN_CONNECT_AND_CREATE
-      source_code_path: ./src/app
+        - name: OPENAI_API_KEY
+          secret:
+            key: API_KEY
+            permission: READ
+            scope: openai-credentials
+
+      source_code_path: ../src/app
       permissions:
-        - level: "CAN_USE"
+        - level: CAN_USE
           user_name: ${var.user_name}

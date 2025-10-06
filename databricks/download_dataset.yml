@@ -7,21 +7,8 @@ resources:
         - task_key: download_dataset
           notebook_task:
             notebook_path: ../src/jobs/download_dataset.py
-            base_parameters:
-              catalog: ${var.catalog}
-              schema: ${var.schema}
-
-          # The key that references an environment spec in a job.
-          environment_key: default
-
-      # A list of task execution environment specifications that can be referenced by tasks of this job.
-      environments:
-        - environment_key: default
-
-          # Full documentation of this spec can be found at:
-          # https://docs.databricks.com/api/workspace/jobs/create#environments-spec
-          spec:
-            environment_version: "1"
-            dependencies:
-              - datasets==4.1.1
-              - pandas==2.3.3
+      parameters:
+        - name: catalog
+          default: ${var.catalog}
+        - name: schema
+          default: ${var.schema}

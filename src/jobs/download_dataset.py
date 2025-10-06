@@ -6,6 +6,11 @@
 
 # COMMAND ----------
 
+# DBTITLE 1,Install Dependencies
+%pip install datasets==4.1.1 pandas==2.3.3
+
+# COMMAND ----------
+
 # DBTITLE 1,Imports and Env Vars
 import os
 

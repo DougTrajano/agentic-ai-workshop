@@ -6,6 +6,11 @@
 
 # COMMAND ----------
 
+# DBTITLE 1,Install Dependencies
+%pip install sqlalchemy==2.0.43 psycopg[binary]==3.2.10 databricks-sdk==0.67.0
+
+# COMMAND ----------
+
 import uuid
 
 from sqlalchemy import create_engine, text
@@ -18,7 +23,7 @@ from databricks.sdk import WorkspaceClient
 dbutils.widgets.text("instance_name", "", "Database Instance Name")
 dbutils.widgets.text("port", "5432", "Port")
 dbutils.widgets.text("database", "", "Database")
-dbutils.widgets.text("app_name", "bi-agent", "App Name")
+dbutils.widgets.text("app_name", "agentic-ai-workshop-chat-app", "App Name")
 dbutils.widgets.dropdown(
     "sslmode",
     "require",
@@ -83,8 +88,8 @@ def check_table_exists(engine, table_name: str):
     query = text(
         """
     SELECT EXISTS (
-        SELECT FROM information_schema.tables 
-        WHERE table_schema = 'public' 
+        SELECT FROM information_schema.tables
+        WHERE table_schema = 'public'
         AND table_name = :table_name
     );
     """
@@ -100,8 +105,8 @@ def get_existing_tables(engine):
     query = text(
         """
     SELECT table_name
-    FROM information_schema.tables 
-    WHERE table_schema = 'public' 
+    FROM information_schema.tables
+    WHERE table_schema = 'public'
     AND table_name IN ('users', 'threads', 'steps', 'elements', 'feedbacks', 'chat_sessions')
     ORDER BY table_name;
     """
