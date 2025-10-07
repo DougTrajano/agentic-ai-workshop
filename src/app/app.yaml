@@ -7,8 +7,8 @@ env:
   - name: CHAINLIT_AUTH_SECRET
     value: "bnwQBuRit,mixhjIz9?wD9CZsb2IGEe^GXvz2gri8-aL-RCwrRdpRaAKGagEl$8j"
 
-  # - name: DATABASE_INSTANCE
-  #   value: "${var.base_name}-lakebase"
+  # - name: AGENT_SCHEMA
+  #   value: "${var.agent_schema}"
 
   - name: ENABLE_HEADER_AUTH
     value: true

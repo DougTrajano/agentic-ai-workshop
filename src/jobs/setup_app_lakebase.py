@@ -13,7 +13,7 @@
 
 import uuid
 
-from sqlalchemy import create_engine, text
+from sqlalchemy import create_engine, text, Engine
 from databricks.sdk import WorkspaceClient
 
 # COMMAND ----------
@@ -69,7 +69,8 @@ with connection_pool.connect() as conn:
 
 # COMMAND ----------
 
-def create_sync_engine():
+def create_sync_engine() -> Engine:
+    """Create a synchronous SQLAlchemy engine for PostgreSQL"""
     cred = w.database.generate_database_credential(
         request_id=str(uuid.uuid4()), instance_names=[instance_name]
     )
@@ -83,7 +84,7 @@ def create_sync_engine():
 
 # COMMAND ----------
 
-def check_table_exists(engine, table_name: str):
+def check_table_exists(engine: Engine, table_name: str):
     """Check if a table exists in the database"""
     query = text(
         """
@@ -100,7 +101,7 @@ def check_table_exists(engine, table_name: str):
 
 # COMMAND ----------
 
-def get_existing_tables(engine):
+def get_existing_tables(engine: Engine):
     """Get list of existing Chainlit tables"""
     query = text(
         """
@@ -117,7 +118,7 @@ def get_existing_tables(engine):
 
 # COMMAND ----------
 
-def setup_chainlit_schema(engine):
+def setup_chainlit_schema(engine: Engine):
     """Set up the official Chainlit SQLAlchemy schema"""
     try:
         # Check existing tables
@@ -253,7 +254,7 @@ app_name = dbutils.widgets.get("app_name")
 app_id = w.apps.get(name=app_name).id
 
 
-def grant_schema_permissions(engine, app_id):
+def grant_schema_permissions(engine: Engine, app_id: str):
     """Grant permissions to the app"""
     try:
 
@@ -275,27 +276,28 @@ def grant_schema_permissions(engine, app_id):
         traceback.print_exc()
 
 
-def grant_table_permissions(engine, app_id):
+def grant_table_permissions(engine: Engine, app_id: str):
     """Grant permissions to the app"""
     try:
-        for table in ["elements", "feedbacks", "steps", "threads", "users"]:
-            # Get the current user
-            sql = text(
-                f"""
-            GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE "{database}"."public"."{table}" TO "{app_id}";
+        sql = text(
+            f"""
+            GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA public TO "{app_id}";
             """
-            )
+        )
 
-            with engine.connect() as conn:
-                conn.execute(sql)
-                conn.commit()
+        with engine.connect() as conn:
+            conn.execute(sql)
+            conn.commit()
 
-            print(f"✅ Granted table permissions for {table}")
+        print(f"✅ Granted table permissions for all tables in schema public")
 
     except Exception as e:
         print(f"❌ Error granting table permissions: {e}")
         import traceback
+        traceback.print_exc()
 
-
-grant_schema_permissions(engine, app_id)
-grant_table_permissions(engine, app_id)
+if app_id:
+    grant_schema_permissions(engine, app_id)
+    grant_table_permissions(engine, app_id)
+else:
+    raise ValueError(f"App with name {app_name} not found")

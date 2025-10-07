@@ -8,9 +8,9 @@ from databricks.sdk import WorkspaceClient
 workspace_client = WorkspaceClient()
 
 
-def create_lakebase_engine(engine_url: str):
+def create_lakebase_engine(engine_url: str, connect_args: dict | None = None):
     """Create a SQLAlchemy engine for Lakebase with token management."""
-    engine = create_engine(engine_url)
+    engine = create_engine(engine_url, connect_args=connect_args or {})
 
     @event.listens_for(engine, 'do_connect')
     def provide_token(dialect, conn_rec, cargs, cparams):

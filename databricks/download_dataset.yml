@@ -8,7 +8,13 @@ resources:
           notebook_task:
             notebook_path: ../src/jobs/download_dataset.py
       parameters:
-        - name: catalog
-          default: ${var.catalog}
+        - name: instance_name
+          default: ${resources.database_instances.app-database.name}
+        - name: database
+          default: ${var.database_name}
         - name: schema
-          default: ${var.schema}
+          default: ${var.agent_schema}
+        - name: app_name
+          default: ${var.base_name}-chat-app
+        - name: port
+          default: "5432"

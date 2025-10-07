@@ -28,6 +28,9 @@ class Settings(BaseSettings):
 
     # Lakebase
     # DATABASE_INSTANCE: str = Field(..., description='Database instance name')
+    AGENT_SCHEMA: str = Field(
+        default='human_resources', description='Schema name for the data agent'
+    )
 
     PGHOST: str | None = Field(default=None, description='PostgreSQL host')
     PGPORT: int = Field(default=5432, description='PostgreSQL port')

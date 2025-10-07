@@ -27,7 +27,6 @@ if settings.ENABLE_HEADER_AUTH:
     @cl.header_auth_callback
     async def auth_from_header(headers: Headers) -> cl.User | None:
         """Authenticate user from headers."""
-        logger.info({'headers': dict(zip(headers.keys(), headers.values()))})
         user = headers.get('x-forwarded-preferred-username')
         token = headers.get('x-forwarded-access-token')
         email = headers.get('x-forwarded-email') or user
@@ -95,6 +94,11 @@ async def set_starters(user: cl.User | None = None) -> list[cl.Starter]:
             message='Show my headcount by generation.',
             # icon='/public/write.svg',
         ),
+        cl.Starter(
+            label='Generation Distribution',
+            message='Show me the average salary by gender.',
+            # icon='/public/write.svg',
+        ),
     ]
 
 
@@ -131,11 +135,9 @@ async def on_message(msg: cl.Message):
 
     # Data Agent
     logger.debug("Invoking agent with user's message.")
-    response = await agent.ainvoke(
-        {'messages': [HumanMessage(content=msg.content)]}, config=config
-    )
+    response = agent.invoke({'messages': [HumanMessage(content=msg.content)]}, config=config)
 
-    response = AgentOutput.model_validate(response)
+    response = AgentOutput.model_validate(response['structured_response'])
 
     elements = []
     if response.plotly_json_fig:
@@ -144,31 +146,22 @@ async def on_message(msg: cl.Message):
     if response.dataset:
         df = pd.DataFrame(response.dataset)
         elements.append(cl.Dataframe(name='DataFrame', data=df, display='side'))
-    await cl.Message(content=response.summary, elements=elements or None).send()
+    await cl.Message(content=response.get_message(), elements=elements or None).send()
 
     # Stream the agent's response
     # final_answer = cl.Message(content='')
 
-    # for msg, _ in agent.stream(
+    # for msg, metadata in agent.stream(
     #     {'messages': [HumanMessage(content=msg.content)]}, stream_mode='messages', config=config
     # ):
-    #     await final_answer.stream_token(msg.content)
+    #     if (
+    #         msg.content
+    #         and not isinstance(msg, HumanMessage)
+    #         and metadata["langgraph_node"] == "final"
+    #     ):
+    #         await final_answer.stream_token(msg.content)
 
     # await final_answer.send()
-
-    # ### OLD
-    # await cl.Message(content="Hello World!").send()
-
-    # # Create a Plotly figure
-    # fig = go.Figure(data=[go.Scatter(x=[1, 2, 3], y=[4, 1, 2])])
-
-    # # Send the Plotly figure as an element
-    # await cl.Message(
-    #     content="Here is an interactive Plotly chart:",
-    #     elements=[
-    #         cl.Plotly(name="my_plot", figure=fig, display="inline")
-    #     ],
-    # ).send()
 
 
 @cl.on_chat_resume

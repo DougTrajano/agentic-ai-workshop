@@ -25,6 +25,10 @@ variables:
     description: Name of the database to create
     default: agentic_ai_workshop_db
 
+  agent_schema:
+    description: Name of the schema for the data agent
+    default: human_resources
+
 targets:
   dev:
     mode: development

@@ -66,6 +66,13 @@ class AgentOutput(BaseModel):
         ),
     )
 
+    def get_message(self) -> str:
+        """Get a user-friendly message summarizing the agent's response."""
+        message = self.summary
+        if self.sql_query:
+            message += f'\n\nSQL Query Executed:\n```sql\n{self.sql_query}\n```'
+        return message
+
 
 def calculator(expression: str) -> str:
     """Calculate expression using Python's numexpr library.
@@ -130,7 +137,8 @@ def create_data_agent() -> CompiledStateGraph:
     logger.debug('Setting up Lakebase SQL database connection.')
 
     lakebase_engine = create_lakebase_engine(
-        engine_url=Settings(PGDATABASE='hr_database').pg_connection_string
+        engine_url=Settings().pg_connection_string,
+        connect_args={'options': f'-csearch_path={Settings().AGENT_SCHEMA}'},
     )
 
     db = SQLDatabase(lakebase_engine)
