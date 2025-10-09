@@ -137,9 +137,7 @@ async def on_message(msg: cl.Message):
 
     # Attempt #1 - invoke (sync)
     logger.debug("Invoking agent with user's message.")
-    response = await agent.ainvoke(
-        {'messages': [HumanMessage(content=msg.content)]}, config=config
-    )
+    response = agent.invoke({'messages': [HumanMessage(content=msg.content)]}, config=config)
     logger.debug({'response': response})
     response = AgentOutput.model_validate(response['structured_response'])
 
