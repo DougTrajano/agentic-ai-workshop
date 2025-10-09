@@ -1,0 +1,20 @@
+command: ["chainlit", "run", "main.py"]
+
+env:
+  - name: LOG_LEVEL
+    value: DEBUG
+
+  - name: CHAINLIT_AUTH_SECRET
+    value: "bnwQBuRit,mixhjIz9?wD9CZsb2IGEe^GXvz2gri8-aL-RCwrRdpRaAKGagEl$8j"
+
+  # - name: AGENT_SCHEMA
+  #   value: "${var.agent_schema}"
+
+  - name: ENABLE_HEADER_AUTH
+    value: true
+
+  - name: ENABLE_PASSWORD_AUTH
+    value: false
+
+  - name: OPENAI_API_KEY
+    valueFrom: OPENAI_API_KEY

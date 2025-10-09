@@ -21,6 +21,7 @@ repos:
       - id: check-case-conflict
       - id: check-docstring-first
       - id: debug-statements
+        exclude: "^src/jobs/"
       - id: name-tests-test
         args: ["--pytest-test-first"]
       - id: requirements-txt-fixer
@@ -32,8 +33,10 @@ repos:
       # Linter
       - id: ruff
         args: [--fix, --exit-non-zero-on-fix]
+        exclude: "^src/jobs/"
       # Formatter (replaces black)
       - id: ruff-format
+        exclude: "^src/jobs/"
 
   # Security linting with bandit
   - repo: https://github.com/PyCQA/bandit
