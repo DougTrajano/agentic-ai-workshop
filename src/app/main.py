@@ -1,5 +1,7 @@
 """Main application file for the Chainlit chat application."""
 
+import json
+
 import chainlit as cl
 import pandas as pd
 from backend.agent import AgentOutput, create_data_agent
@@ -75,14 +77,19 @@ async def set_starters(user: cl.User | None = None) -> list[cl.Starter]:
     """Set the starters for the chat application."""
     return [
         cl.Starter(
-            label='Female Headcount',
-            message='How many female employees are in the company?',
-            # icon='/public/idea.svg',
-        ),
-        cl.Starter(
             label='Headcount by Business Unit',
             message='Show me the headcount by business unit.',
             # icon='/public/learn.svg',
+        ),
+        cl.Starter(
+            label='Headcount by Gender',
+            message='Show me the headcount by gender.',
+            # icon='/public/write.svg',
+        ),
+        cl.Starter(
+            label='Headcount by Generation',
+            message='Show me the headcount by generation.',
+            # icon='/public/write.svg',
         ),
         cl.Starter(
             label='Average Salary by Job Title',
@@ -90,14 +97,9 @@ async def set_starters(user: cl.User | None = None) -> list[cl.Starter]:
             # icon='/public/terminal.svg',
         ),
         cl.Starter(
-            label='Generation Distribution',
-            message='Show my headcount by generation.',
-            # icon='/public/write.svg',
-        ),
-        cl.Starter(
-            label='Generation Distribution',
-            message='Show me the average salary by gender.',
-            # icon='/public/write.svg',
+            label='Total Compensation by Department',
+            message='What is the total compensation for each department?',
+            # icon='/public/idea.svg',
         ),
     ]
 
@@ -129,14 +131,16 @@ async def on_message(msg: cl.Message):
 
     config = RunnableConfig(
         configurable={'thread_id': cl.context.session.thread_id},
-        recursion_limit=20,
+        recursion_limit=40,
         callbacks=[cl.LangchainCallbackHandler()],
     )
 
-    # Data Agent
+    # Attempt #1 - invoke (sync)
     logger.debug("Invoking agent with user's message.")
-    response = agent.invoke({'messages': [HumanMessage(content=msg.content)]}, config=config)
-
+    response = await agent.ainvoke(
+        {'messages': [HumanMessage(content=msg.content)]}, config=config
+    )
+    logger.debug({'response': response})
     response = AgentOutput.model_validate(response['structured_response'])
 
     elements = []
@@ -144,24 +148,11 @@ async def on_message(msg: cl.Message):
         fig = plotly_renderer(response.plotly_json_fig)
         elements.append(cl.Plotly(name='plot', figure=fig, display='inline'))
     if response.dataset:
-        df = pd.DataFrame(response.dataset)
+        df = pd.DataFrame(**json.loads(response.dataset))
         elements.append(cl.Dataframe(name='DataFrame', data=df, display='side'))
     await cl.Message(content=response.get_message(), elements=elements or None).send()
 
-    # Stream the agent's response
-    # final_answer = cl.Message(content='')
-
-    # for msg, metadata in agent.stream(
-    #     {'messages': [HumanMessage(content=msg.content)]}, stream_mode='messages', config=config
-    # ):
-    #     if (
-    #         msg.content
-    #         and not isinstance(msg, HumanMessage)
-    #         and metadata["langgraph_node"] == "final"
-    #     ):
-    #         await final_answer.stream_token(msg.content)
-
-    # await final_answer.send()
+    logger.debug('Message handling complete.')
 
 
 @cl.on_chat_resume

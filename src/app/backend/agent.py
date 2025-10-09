@@ -1,15 +1,15 @@
 """This module creates a data (ReAct) agent with SQL database access."""
 
 import math
-from typing import Any
 
 import numexpr
+import sqlparse
 from langchain_community.agent_toolkits.sql.toolkit import SQLDatabaseToolkit
 from langchain_community.utilities import SQLDatabase
 from langchain_openai import ChatOpenAI
 from langgraph.graph.state import CompiledStateGraph
 from langgraph.prebuilt import create_react_agent
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, field_validator
 
 from backend.database.lakebase import create_lakebase_engine
 from backend.settings import Settings
@@ -23,7 +23,7 @@ class AgentOutput(BaseModel):
     the SQL query executed, the resulting dataset, and an optional visualization.
     """
 
-    summary: str = Field(
+    content: str = Field(
         ...,
         description=(
             "A concise, natural language answer to the user's question that summarizes the key findings. "
@@ -43,32 +43,42 @@ class AgentOutput(BaseModel):
         ),
     )
 
-    dataset: list[dict[str, Any]] | None = Field(
+    dataset: str | None = Field(
         default=None,
         description=(
-            "The raw data results in Pandas DataFrame 'records' orientation format (list of dictionaries). "
-            'Each dictionary represents one row, with keys as column names and values as the cell data. '
-            'Include this when returning tabular data that the user can inspect or download. '
-            'Limit to a reasonable number of rows (e.g., top 100) for large datasets. '
-            "Example: [{'Name': 'Alice', 'Age': 25, 'Salary': 70000}, {'Name': 'Bob', 'Age': 30, 'Salary': 80000}]"
+            'A JSON-serializable representation of the dataset returned by the SQL query. '
+            'This should be compatible with pandas DataFrame construction (data and columns). '
+            'Include this field when the SQL query returns tabular data that supports the answer. '
+            'Example: \'{"data": [[120000, 70000, 210000]], "columns": ["average_salary", "min_salary", "max_salary"]}\''
         ),
     )
 
-    plotly_json_fig: dict | None = Field(
+    plotly_json_fig: str | None = Field(
         default=None,
         description=(
-            "A complete Plotly figure specification in JSON format that visualizes the data to answer the user's question. "
-            "The JSON should contain 'data' (list of traces) and 'layout' (figure configuration) keys. "
-            'Choose appropriate chart types (bar, line, scatter, pie, etc.) based on the data and question. '
-            'Include meaningful titles, axis labels. This can be rendered using plotly.io.from_json(). '
-            "Example: {'data': [{'type': 'bar', 'x': ['Alice', 'Bob'], 'y': [70000, 80000], 'name': 'Salary'}], "
-            "'layout': {'title': 'Employee Salaries', 'xaxis': {'title': 'Name'}, 'yaxis': {'title': 'Salary ($)'}}}"
+            'A Plotly JSON figure representation for visualizing the dataset. '
+            'Include this field when a graphical representation of the data is helpful. '
+            "IMPORTANT: Always include data labels on the chart by setting 'text' in the trace "
+            "and 'textposition' to display values on the bars/points. "
+            "For bar charts, use 'textposition': 'auto' or 'outside'. "
+            "For scatter plots, use 'mode': 'markers+text'. "
+            'Example: \'{"data": [{"type": "bar", "x": ["A", "B"], "y": [10, 20], '
+            '"text": [10, 20], "textposition": "auto"}], '
+            '"layout": {"title": "Sample Bar Chart"}}\''
         ),
     )
+
+    @field_validator('sql_query')
+    @classmethod
+    def format_sql_query(cls, v: str | None) -> str | None:
+        """Format SQL query by removing common leading whitespace."""
+        if v is None:
+            return None
+        return sqlparse.format(v, reindent=True, keyword_case='upper', indent_width=4).strip()
 
     def get_message(self) -> str:
         """Get a user-friendly message summarizing the agent's response."""
-        message = self.summary
+        message = self.content
         if self.sql_query:
             message += f'\n\nSQL Query Executed:\n```sql\n{self.sql_query}\n```'
         return message
@@ -129,24 +139,22 @@ def create_data_agent() -> CompiledStateGraph:
     """Create a data agent with a calculator tool and SQL database access."""
     logger.debug('Creating data agent.')
 
-    tools = [calculator]
-
+    # Define LLM
     llm = ChatOpenAI(model='gpt-4.1')
 
-    # Databricks SQL Connection and tools
-    logger.debug('Setting up Lakebase SQL database connection.')
-
+    # Define Databricks Lakebase (PostgreSQL) engine
     lakebase_engine = create_lakebase_engine(
         engine_url=Settings().pg_connection_string,
         connect_args={'options': f'-csearch_path={Settings().AGENT_SCHEMA}'},
     )
 
+    # Define Agent tools
+    tools = [calculator]
     db = SQLDatabase(lakebase_engine)
     toolkit = SQLDatabaseToolkit(db=db, llm=llm)
     sql_tools = toolkit.get_tools()
-    logger.debug('Lakebase SQL database connection established and tools created.')
 
-    # Define the agent
+    # Define the LangGraph Agent
     agent = create_react_agent(
         model=llm,
         tools=tools + sql_tools,

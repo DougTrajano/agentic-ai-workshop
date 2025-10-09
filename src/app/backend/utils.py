@@ -52,11 +52,11 @@ logger.addHandler(handler)
 logger.propagate = False
 
 
-def plotly_renderer(json_fig: dict) -> go.Figure | go.FigureWidget:
+def plotly_renderer(json_fig: str) -> go.Figure | go.FigureWidget:
     """Render a Plotly figure from its JSON representation and update its theme to 'plotly_dark'.
 
     Args:
-        json_fig (dict): The JSON representation of the Plotly figure.
+        json_fig (str): The JSON-string representation of the Plotly figure.
 
     Returns:
         go.Figure | go.FigureWidget: The rendered Plotly figure.
