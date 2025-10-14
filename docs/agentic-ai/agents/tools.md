@@ -1,4 +1,4 @@
-# 🛠️ Ferramentas e Model Context Protocol (MCP)
+# 🛠️ Tools e Model Context Protocol (MCP)
 
 As **ferramentas** permitem que agentes interajam com o mundo externo, executando tarefas específicas além da geração de texto.
 

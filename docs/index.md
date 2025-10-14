@@ -4,7 +4,7 @@ Neste workshop, vamos explorar a **Agentic AI**, uma nova abordagem em inteligê
 
 Você aprenderá a criar **AI Agents** (também conhecido como *LLM-based Agents*) e **AI Workflows** que podem raciocinar, planejar e executar ações de forma autônoma.
 
-![Agentic AI](./images/agentic-ai.jpg)
+![Agentic AI](./assets/agentic-ai.jpg)
 
 ## O que vamos aprender?
 

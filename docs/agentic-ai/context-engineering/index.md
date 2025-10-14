@@ -1,40 +1,23 @@
-# Context Engineering: A Nova Fronteira da IA Agentiva
+# Context Engineering
 
-A arte de fornecer contexto relevante para os AI Agents no formato e na hora certa.
+> "Context engineering is the delicate art and science of filling the context window with just the right information for the next step." — **[Andrej Karpathy](https://karpathy.ai/)**.
 
-**Context Engineering** é a evolução natural do prompt engineering, focada na otimização de todo o payload informacional fornecido aos modelos de linguagem durante a inferência[^1]. Vai muito além de escrever bons prompts - é sobre arquitetar o contexto completo que permite aos agentes executarem tarefas complexas com autonomia e precisão.
+**Context Engineering** é o processo de construir sistemas dinâmicos que fornecem as informações e ferramentas certas no formato adequado, de modo que um modelo de linguagem (LLM) possa realizar uma tarefa de forma confiável[^1].
 
-![Context Engineering](../../images/context-engineering.png)
+![Context Engineering](../../assets/context-engineering.png){ width="600px" loading=lazy }
 
-## 🚀 Por que Context Engineering?
+É uma evolução natural de Prompt Engineering.
 
-Até alguns anos atrás, muitos pesquisadores de IA (incluindo os mais renomados) afirmavam que o prompt engineering seria "coisa do passado". Obviamente, estavam muito enganados!
+Enquanto Prompt Engineering foca em encontrar as palavras certas para o **System Prompt**, Context Engineering responde à pergunta mais ampla:[^2].
 
-Na verdade, o prompt engineering se tornou ainda mais importante - tão importante que agora está sendo "rebatizado" como **context engineering**.
+> "Qual configuração de contexto tem maior probabilidade de gerar o comportamento desejado do modelo?"
 
-## 🎯 Context Engineering vs. Prompt Engineering
-
-Enquanto o **prompt engineering** foca em escrever bons prompts estáticos, o **context engineering** engloba um escopo muito maior:
-
-| **Prompt Engineering** | **Context Engineering** |
-|---|---|
-| "O que você diz" | "Tudo o mais que o modelo vê" |
-| Instrução única | Exemplos, memória, retrieval, tools, estado, fluxo de controle |
-| Prompts estáticos | Contexto dinâmico e adaptativo |
-| Foco na pergunta | Foco na experiência completa |
-
-### Os Pilares do Context Engineering
-
-- **🔧 Montagem dinâmica** de contexto relevante de múltiplas fontes
-- **⚡ Seleção adaptativa** de ferramentas e informações
-- **📐 Formatação otimizada** para diferentes tipos de tarefa  
-- **🧠 Gestão de memória** e estado do agente
-- **🔍 Validação e filtragem** de informação ruidosa
-- **⚖️ Balanceamento de recursos** e custos
-
-!!! quote "O Contexto é Tudo"
-    "Não é apenas o prompt único que os usuários enviam para um LLM. Contexto é o payload completo de informações fornecido a um LLM no momento da inferência"
+![Effective context engineering for AI agents | Anthropic](https://www.anthropic.com/_next/image?url=https%3A%2F%2Fwww-cdn.anthropic.com%2Fimages%2F4zrzovbb%2Fwebsite%2Ffaa261102e46c7f090a2402a49000ffae18c5dd6-2292x1290.png&w=3840&q=75){ loading=lazy }
+/// caption
+[Effective context engineering for AI agents | Anthropic](https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents)
+///
 
 ---
 
 [^1]: [The rise of "context engineering" - LangChain](https://blog.langchain.com/the-rise-of-context-engineering/)
+[^2]: [Effective context engineering for AI agents - Anthropic](https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents)

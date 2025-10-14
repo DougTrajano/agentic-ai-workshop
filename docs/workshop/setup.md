@@ -1,13 +1,6 @@
 # Setup do Ambiente
 
-## Pré-requisitos
-
-Antes de iniciar, certifique-se de ter:
-
-- **Python 3.12+**
-- **Git**
-- **VS Code** (recomendado)
-- **API Keys** (OpenAI, Anthropic, ou similar)
+Este guia ajudará você a configurar o ambiente necessário para o workshop "Agentic AI Workshop PUCRS 2025". Siga os passos abaixo para garantir que tudo esteja funcionando corretamente.
 
 ## Instalação
 

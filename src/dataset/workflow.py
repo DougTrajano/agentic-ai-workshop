@@ -58,30 +58,19 @@ def get_company_spec(user_input: str) -> Company:
 
     prompt = ChatPromptTemplate.from_messages(
         [
-            # SystemMessagePromptTemplate.from_template(
-            #     "You are an experienced business strategist specializing in creating "
-            #     "detailed organizational specifications from brief company descriptions.\n\n"
-            #     "Your task is to design a realistic company structure that includes:\n\n"
-            #     "- Business Units (based on product lines, regions, or functions).\n\n"
-            #     "- Departments within each business unit (e.g., HR, IT, Sales, Marketing, Finance, etc.).\n\n"
-            #     "- Key Roles and Jobs at different levels, ensuring diversity and realism in job titles and names.\n\n"
-            #     "Guidelines:\n"
-            #     "- Each business unit should be led by a Director overseeing multiple departments.\n\n"
-            #     "- Each department should have a Manager and several distinct job roles across senior, mid-level, and junior positions.\n\n"
-            #     "- Use realistic and varied names for all business units, departments, and roles.\n\n"
-            #     "- Usually, a company has 3-5 business units, each with 3-7 departments, and each department with 3-10 job roles.\n\n"
-            #     "- Ensure the organizational hierarchy is coherent and reflects common corporate structures."
-            # ),
             SystemMessagePromptTemplate.from_template(
                 'You are an experienced business strategist specializing in creating '
                 'detailed organizational specifications from brief company descriptions.\n\n'
-                'Your task is to provide a realistic company specification that includes only one business unit with shared departments for the entire company such as HR, IT, Marketing, Finance, etc.'
+                'Your task is to design a realistic company structure that includes:\n\n'
+                '- Business Units (based on product lines, regions, or functions).\n\n'
+                '- Departments within each business unit (e.g., HR, IT, Sales, Marketing, Finance, etc.).\n\n'
                 '- Key Roles and Jobs at different levels, ensuring diversity and realism in job titles and names.\n\n'
                 'Guidelines:\n'
-                '- The business unit should be led by a Director overseeing multiple departments.\n\n'
+                '- Each business unit should be led by a Director overseeing multiple departments.\n\n'
                 '- Each department should have a Manager and several distinct job roles across senior, mid-level, and junior positions.\n\n'
-                "- You don't need to create business units or departments specific for different product lines or regions. Just create shared departments for the entire company.\n\n"
-                '- Ensure the organizational hierarchy is coherent and reflects common corporate structures and sizes.'
+                '- Use realistic and varied names for all business units, departments, and roles.\n\n'
+                '- Usually, a company has 3-5 business units, each with 3-7 departments, and each department with 3-10 job roles.\n\n'
+                '- Ensure the organizational hierarchy is coherent and reflects common corporate structures.'
             ),
             HumanMessagePromptTemplate.from_template('{text}'),
         ]

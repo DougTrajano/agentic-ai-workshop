@@ -1,15 +1,22 @@
 # Generative AI: A Base da Agentic AI
 
-A **Generative AI** refere-se a modelos de inteligência artificial que criam conteúdo "novo" (texto, imagem, áudio) com base no que aprenderam durante o treinamento[^1]. Estes sistemas não apenas classificam ou fazem previsões, mas geram saídas originais e criativas.
+**Generative AI** é um tipo de inteligência artificial capaz de gerar conteúdo original, como texto, imagens, música, vídeo e código, a partir de uma solicitação (prompt)[^1].
 
-## 🧠 Large Language Models (LLMs)
+Esses modelos são treinados em grandes volumes de dados e aprendem padrões complexos para criar novos dados combinando os dados de treinamento com a solicitação do usuário.
 
-Os **Large Language Models (LLMs)** são modelos de base treinados em volumes massivos de dados, capazes de entender e gerar linguagem natural e resolver várias tarefas[^2]. Exemplos incluem:
+## :brain: Large Language Models (LLMs)
 
-- **GPT-4** (OpenAI)
-- **Claude** (Anthropic)
-- **Gemini** (Google)
-- **Llama** (Meta)
+Os **Large Language Models (LLMs)** são modelos treinados em grandes volumes de textos, capazes de entender e gerar linguagem natural e resolver várias tarefas[^2].
+
+- **GPT-5** (OpenAI)
+- **Claude Sonnet 4.5** (Anthropic)
+- **Gemini 2.5 Pro** (Google)
+- **Llama 4** (Meta)
+
+![Transformer Explainer](https://miro.medium.com/v2/resize:fit:1400/1*iCKo6UH8I285n329j3YbBA.png)
+///Caption
+[Transformer Explainer: LLM Transformer Model Visually Explained](https://poloclub.github.io/transformer-explainer/)
+///
 
 ```python
 from openai import OpenAI
@@ -29,13 +36,15 @@ print(response.choices[0].message.content)
 
 Output:
 
-```
+```md
 The theory of relativity, developed by Albert Einstein, ...
 ```
 
-## 🎯 Embedding Models
+## :material-vector-polyline: Embedding Models
 
 Transformam textos, imagens ou outros objetos em vetores numéricos que preservam relações semânticas, viabilizando buscas por similaridade e integração em aplicações de IA[^3].
+
+![Embedding Model](https://weaviate.io/assets/images/embedding_model-83a51fb9487ceeb03d7af8aeccde3ffb.png)
 
 **Aplicações:**
 
@@ -60,31 +69,65 @@ print(response.data[0].embedding)
 
 Output:
 
-```
+```python
 [-0.002306425, 0.003677662, 0.007123456, ...]
 ```
 
-## 🎨 Diffusion Models
+## :art: Diffusion Models
 
 Geram dados (ex.: imagens de alta qualidade) aplicando ruído sucessivo nos dados de treinamento e aprendendo a reverter esse processo[^4]. Este mecanismo é usado em:
 
-- **DALL·E 2** (OpenAI)
+- **Sora** (OpenAI)
 - **Stable Diffusion** (Stability AI)
 - **Midjourney**
 - **Gemini 2.5 Flash Image (Nano Banana)** (Google)
 
 ![Google Gemini 2.5 Flash Image (Nano Banana)](https://www.gstatic.com/aistudio/welcome/v3/native_image_generation_hero.png)
 
-## 🌍 Multimodal Models
+## :material-multimedia: Multimodal Models
 
-Processam múltiplas modalidades (texto, imagem, áudio, vídeo) simultaneamente[^6]. Exemplos incluem:
+Um modelo multimodal pode receber uma foto de um prato de comida e gerar automaticamente uma receita detalhada, ou analisar um gráfico em uma imagem e explicar os insights em texto. Eles processam múltiplas modalidades (texto, imagem, áudio, vídeo) nativamente[^6].
 
-- **GPT-4V** (visão)
-- **Gemini Ultra** (multimodal)
-- **Claude 3** (visão e texto)
+<div class="grid cards" markdown>
 
-!!! example "Exemplo Prático"
-    Um modelo multimodal pode receber uma foto de um prato de comida e gerar automaticamente uma receita detalhada, ou analisar um gráfico em uma imagem e explicar os insights em texto.
+-   **GPT-5**
+
+    ---
+
+    - Input: text, images, and audio.
+    - Output: text.
+
+-   **Gemini 2.5 Pro**
+
+    ---
+
+    - Input: Text, Image, Video, Audio, PDF
+    - Output: Text
+
+-   **Claude Sonnet 4.5**
+
+    ---
+
+    - Input: Text, Image
+    - Output: Text
+
+-   **Llama 4**
+
+    ---
+
+    - Input: Text, Image
+    - Output: Text
+
+-   **Grok 4**
+
+    ---
+
+    - Input: Text, Image
+    - Output: Text
+
+</div>
+
+![Multimodal Example](https://lh3.googleusercontent.com/-Ps0G2TK1Q-LUbTU0vowBhng7sKV8BiFigEmmm7ub5bxC2lV8hg81EjYAB4Eij4meyRLTSu1Txim=s944-w944-rw-lo)
 
 ---
 

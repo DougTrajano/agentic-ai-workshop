@@ -1,6 +1,6 @@
 # Pré-requisitos
 
-- Conhecimento básico de programação em [Python](https://www.python.org/).
+- Conhecimento básico de programação em [Python](https://www.python.org/) e [SQL](https://www.w3schools.com/sql/).
 - Familiaridade com conceitos de aprendizado de máquina e inteligência artificial.
 - Ambiente de desenvolvimento configurado (Python 3.12+, GitHub, etc).
 
