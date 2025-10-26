@@ -2,7 +2,7 @@
 
 Welcome to the Agentic AI Workshop! This repository contains hands-on Jupyter notebooks demonstrating how to build intelligent AI agents using LangChain, LangGraph, and modern LLMs.
 
-![Agent Demo](./docs/agent_demo.jpg)
+![People Analytics Agent](./docs/people_analytics_agent.png)
 
 ## 🎯 Workshop Overview
 
