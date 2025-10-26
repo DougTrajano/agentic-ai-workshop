@@ -20,52 +20,30 @@ classifiers = [
     "Programming Language :: Python :: 3.13",
 ]
 dependencies = [
-    "pydantic-ai>=0.7,<1.0",
-    "pydantic>=2.0,<3.0",
-    "databricks-sdk>=0.63,<1.0",
-    "mlflow>=3.2.0,<4.0",
-    "datasets>=4.2.0",
-]
-
-[project.optional-dependencies]
-langgraph = [
-    "langgraph>=0.2.0",
-    "langchain-core>=0.3.0",
-]
-export = [
+    "datasets==4.3.0",
+    "duckdb==1.4.1",
+    "faker==37.12.0",
+    "huggingface_hub==0.36.0",
+    "langchain-core==1.0.1",
+    "langchain-openai==1.0.1",
+    "langgraph==1.0.1",
     "pandas>=2.0.0",
-    "pyarrow>=10.0.0",
-]
-all = [
-    "langgraph>=0.2.0",
-    "langchain-core>=0.3.0",
-    "pandas>=2.0.0",
-    "pyarrow>=10.0.0",
+    "pydantic-settings==2.11.0",
+    "pydantic==2.12.3",
 ]
 
 [project.urls]
-Homepage = "https://dougtrajano.github.io/agentic-ai-workshop/"
-Documentation = "https://dougtrajano.github.io/agentic-ai-workshop/"
+Homepage = "https://github.com/dougtrajano/agentic-ai-workshop"
 Source = "https://github.com/dougtrajano/agentic-ai-workshop.git"
 "Bug Tracker" = "https://github.com/dougtrajano/agentic-ai-workshop/issues"
 Changelog = "https://github.com/DougTrajano/agentic-ai-workshop/releases"
 
-[project.scripts]
-docs-serve = "mkdocs.__main__:main"
-docs-build = "mkdocs.__main__:main"
-docs-deploy = "mike:deploy"
-
 [dependency-groups]
 dev = [
-    "black>=25.1.0",
-    "flake8>=7.0.0",
     "ipykernel>=6.25.0",
-    "isort>=5.13.0",
     "jupyterlab>=4.0.0",
-    "mypy>=1.14.0",
     "nbstripout>=0.7.1",
     "pre-commit>=4.0.0",
-    "pyright>=1.1.398",
     "pytest>=8.0.0",
     "pytest-asyncio>=0.26.0",
     "pytest-cov>=4.1.0",
@@ -96,14 +74,13 @@ exclude = [
     "**/.ruff_cache",
     "**/.venv",
     "**/.ipynb_checkpoints",
-    "src/jobs"
 ]
 force-exclude = true
 
 [tool.ruff.lint]
 exclude = ["__init__.py"]
-select = ["C", "D", "E", "F", "I", "W"]
-ignore = ["C901", "E501", "E741", "F402", "F823", "D100", "D106"]
+select = ["E", "F", "I", "W"]
+ignore = ["E501", "E741", "F402", "F823"]
 
 [tool.ruff.lint.isort]
 lines-after-imports = 2
@@ -112,9 +89,6 @@ split-on-trailing-comma = true
 
 [tool.ruff.lint.per-file-ignores]
 "**/*.ipynb" = ["F704"]
-
-[tool.ruff.lint.pydocstyle]
-convention = "google"
 
 [tool.ruff.format]
 quote-style = "single"

@@ -1,6 +1,5 @@
 .DS_Store
-.databricks
-temp_*.ipynb
+data/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
