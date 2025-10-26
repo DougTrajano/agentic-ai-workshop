@@ -1,15 +1,55 @@
-# Agentic AI Workshop by ADP Brazil Labs
+# Agentic AI Workshop
 
-Welcome to the Agentic AI Workshop! This repository contains all the materials, examples, and hands-on labs for the workshop on building intelligent agents.
+Welcome to the Agentic AI Workshop! This repository contains hands-on Jupyter notebooks demonstrating how to build intelligent AI agents using LangChain, LangGraph, and modern LLMs.
 
-## 📋 Prerequisites
+## 🎯 Workshop Overview
 
-- Python 3.10 or higher
+This workshop is designed to teach you how to build agentic AI systems through two comprehensive hands-on notebooks:
+
+### 1. **HR Synthetic Database Generator** (`hr_synthetic_database.ipynb`)
+
+Learn how to build an agentic workflow that generates realistic synthetic HR databases based on natural language company descriptions.
+
+**Key Features:**
+
+- Convert user descriptions into structured company specifications using LLMs
+- Generate demographic ratios based on company characteristics
+- Create complete HR database schema with business units, departments, jobs, and employees
+- Parallel processing for efficient data generation
+- Automatic compensation calculation and employee education assignment
+
+### 2. **People Analytics Agent** (`people_analytics_agent.ipynb`)
+
+Build an intelligent agent that can query and analyze HR databases using natural language.
+
+**Key Features:**
+
+- Natural language to SQL query translation
+- Automatic SQL execution and data retrieval
+- Statistical analysis and calculations
+- Data visualization with Plotly
+- Structured responses with summaries, datasets, and charts
+
+## 🚀 Getting Started
+
+### Option 1: Google Colab (Recommended for Quick Start)
+
+Click on the badges below to open the notebooks directly in Google Colab:
+
+- **HR Synthetic Database Generator**: [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/DougTrajano/agentic-ai-workshop/blob/main/hr_synthetic_database.ipynb)
+
+- **People Analytics Agent**: [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/DougTrajano/agentic-ai-workshop/blob/main/people_analytics_agent.ipynb)
+
+All dependencies will be installed automatically when you run the first cell of each notebook.
+
+### Option 2: Local Installation
+
+#### Prerequisites
+
+- Python 3.12 or higher
 - [uv](https://docs.astral.sh/uv/) package manager (recommended) or pip
 
-## 🚀 Installation
-
-### Using uv (Recommended)
+#### Installation Steps
 
 1. **Clone the repository:**
 
@@ -18,166 +58,74 @@ Welcome to the Agentic AI Workshop! This repository contains all the materials, 
    cd agentic-ai-workshop
    ```
 
-2. **Install the project with dependencies:**
+2. **Install dependencies using uv (recommended):**
 
    ```bash
-   # Basic installation
-   uv sync
-   
-   # With development dependencies
+   # Install with development dependencies
    uv sync --group dev
-   
-   # With documentation dependencies
-   uv sync --group docs
-   
-   # Install everything at once
-   uv sync --all-groups
    ```
 
-3. **Activate the virtual environment:**
+   **Or using pip:**
 
    ```bash
-   source .venv/bin/activate  # On Windows: .venv\Scripts\activate
-   ```
-
-### Using pip
-
-1. **Clone the repository:**
-
-   ```bash
-   git clone https://github.com/dougtrajano/agentic-ai-workshop.git
-   cd agentic-ai-workshop
-   ```
-
-2. **Create and activate a virtual environment:**
-
-   ```bash
+   # Create virtual environment
    python -m venv .venv
    source .venv/bin/activate  # On Windows: .venv\Scripts\activate
+   
+   # Install dependencies
+   pip install -e ".[dev]"
    ```
 
-3. **Install the project:**
+3. **Start JupyterLab:**
 
    ```bash
-   pip install -e .
+   # With uv
+   uv run jupyter lab
+   
+   # Or with activated virtual environment
+   jupyter lab
    ```
 
-## 📚 Usage
+4. **Set up your API keys:**
 
-### Documentation
+   Both notebooks require API keys for LLM access (e.g., Google Gemini, OpenAI). You'll be prompted to enter these when running the notebooks, or you can set them as environment variables.
 
-Once installed, you can use the following commands to work with the documentation:
+## 📚 What You'll Learn
 
-- **Serve documentation locally:**
-
-  ```bash
-  # With uv
-  uv run mkdocs serve
-  
-  # Or with activated virtual environment
-  docs-serve
-  # or directly: mkdocs serve
-  ```
-
-- **Build documentation:**
-
-  ```bash
-  # With uv
-  uv run mkdocs build
-  
-  # Or with activated virtual environment  
-  docs-build
-  # or directly: mkdocs build
-  ```
-
-- **Deploy documentation:**
-
-  ```bash
-  # With uv
-  uv run mike deploy
-  
-  # Or with activated virtual environment
-  docs-deploy
-  # or directly: mike deploy
-  ```
-
-### Development
-
-The project includes several development tools configured. You can run them with uv or in an activated virtual environment:
-
-- **Code formatting with Black:**
-
-  ```bash
-  # With uv
-  uv run black .
-  
-  # Or with activated virtual environment
-  black .
-  ```
-
-- **Linting with Ruff:**
-
-  ```bash
-  # With uv
-  uv run ruff check .
-  uv run ruff format .
-  
-  # Or with activated virtual environment
-  ruff check .
-  ruff format .
-  ```
-
-- **Type checking with Pyright:**
-
-  ```bash
-  # With uv
-  uv run pyright
-  
-  # Or with activated virtual environment
-  pyright
-  ```
-
-- **Running tests:**
-
-  ```bash
-  # With uv
-  uv run pytest
-  
-  # Or with activated virtual environment
-  pytest
-  ```
-
-### Jupyter Notebooks
-
-Start JupyterLab for interactive development:
-
-```bash
-# With uv
-uv run jupyter lab
-
-# Or with activated virtual environment
-jupyter lab
-```
+- **Agentic Workflows**: Build multi-step AI workflows with LangGraph
+- **Tool Use**: Create and integrate custom tools for AI agents
+- **LLM Integration**: Work with modern LLMs like Google Gemini
+- **Database Operations**: Generate and query SQL databases with AI
+- **Data Visualization**: Create interactive charts and dashboards
+- **Production Patterns**: Implement error handling, streaming, and structured outputs
 
 ## 🏗️ Project Structure
 
 ```text
-├── docs/                   # Documentation files
-│   ├── workshop/          # Workshop content
-│   └── assets/            # Images and static files
-├── workshop/              # Main Python package
-├── tests/                 # Test files
-├── pyproject.toml         # Project configuration
-└── README.md             # This file
+├── hr_synthetic_database.ipynb    # Database generation agent notebook
+├── people_analytics_agent.ipynb   # People analytics query agent notebook
+├── pyproject.toml                # Project dependencies
+├── LICENSE                       # Apache 2.0 license
+└── README.md                     # This file
 ```
+
+## 📦 Dependencies
+
+Key libraries used in this workshop:
+
+- **LangChain** & **LangGraph**: Agent orchestration and workflow management
+- **Google Generative AI**: LLM integration (Gemini models)
+- **Datasets** & **Hugging Face Hub**: Data handling and storage
+- **Pandas** & **Plotly**: Data analysis and visualization
+- **SQLAlchemy**: Database operations
+- **Pydantic**: Data validation and settings management
+- **Faker**: Synthetic data generation
+
+All dependencies are automatically installed when running the notebooks in Google Colab or when using the local installation methods above.
 
 ## 🤝 Contributing
 
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Run tests and linting
-5. Submit a pull request
+Contributions are welcome! Please feel free to submit a Pull Request. For major changes, please open an issue first to discuss what you would like to change.
 
 ## 📄 License
 
@@ -185,6 +133,20 @@ This project is licensed under the Apache License 2.0 - see the [LICENSE](LICENS
 
 ## 🔗 Links
 
-- [Documentation](https://dougtrajano.github.io/agentic-ai-workshop/)
+- [Repository](https://github.com/dougtrajano/agentic-ai-workshop)
 - [Issues](https://github.com/dougtrajano/agentic-ai-workshop/issues)
 - [Releases](https://github.com/DougTrajano/agentic-ai-workshop/releases)
+
+## 💡 Support
+
+If you have questions or run into issues:
+
+1. Check the notebook documentation and comments
+2. Review the [Issues](https://github.com/dougtrajano/agentic-ai-workshop/issues) page
+3. Open a new issue with detailed information about your problem
+
+---
+
+**Happy Learning! 🚀**
+
+Built with ❤️ by ADP Brazil Labs
