@@ -2,6 +2,8 @@
 
 Welcome to the Agentic AI Workshop! This repository contains hands-on Jupyter notebooks demonstrating how to build intelligent AI agents using LangChain, LangGraph, and modern LLMs.
 
+![Agent Demo](docs/agent_demo.png)
+
 ## 🎯 Workshop Overview
 
 This workshop is designed to teach you how to build agentic AI systems through two comprehensive hands-on notebooks:
@@ -111,15 +113,19 @@ All dependencies will be installed automatically when you run the first cell of 
 
 ## 📦 Dependencies
 
-Key libraries used in this workshop:
+This workshop uses several key libraries for building agentic AI systems. For the complete list of dependencies and their versions, please refer to the [`pyproject.toml`](pyproject.toml) file.
 
-- **LangChain** & **LangGraph**: Agent orchestration and workflow management
-- **Google Generative AI**: LLM integration (Gemini models)
+**Main libraries include:**
+
+- **LangChain**, **LangGraph**, **LangChain Community**: Agent orchestration and workflow management
+- **Google Generative AI** & **OpenAI**: LLM integration (Gemini and GPT models)
 - **Datasets** & **Hugging Face Hub**: Data handling and storage
-- **Pandas** & **Plotly**: Data analysis and visualization
-- **SQLAlchemy**: Database operations
+- **Pandas**, **NumPy**, **Plotly**: Data analysis and visualization
+- **SQLAlchemy**, **DuckDB**: Database operations and querying
 - **Pydantic**: Data validation and settings management
 - **Faker**: Synthetic data generation
+- **Chainlit**: Interactive chat interfaces
+- **pyngrok**: Tunneling for public access
 
 All dependencies are automatically installed when running the notebooks in Google Colab or when using the local installation methods above.
 
