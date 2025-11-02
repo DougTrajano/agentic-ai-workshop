@@ -1,12 +1,14 @@
 # Agentic AI Workshop
 
+[Google Slides](https://docs.google.com/presentation/d/1tRLQ1jSyAibVF584YE_6jLNImQ5dqAsO9jFBVScy10w/edit?usp=sharing)
+
 Welcome to the Agentic AI Workshop! This repository contains hands-on Jupyter notebooks demonstrating how to build intelligent AI agents using LangChain, LangGraph, and modern LLMs.
 
 ![People Analytics Agent](docs/people_analytics_agent.png)
 
 ## 🎯 Workshop Overview
 
-This workshop is designed to teach you how to build agentic AI systems through two comprehensive hands-on notebooks:
+This workshop is designed to teach you how to build agentic AI systems through two hands-on Jupyter Notebooks:
 
 ### 1. **HR Synthetic Database Generator** (`hr_synthetic_database.ipynb`)
 
